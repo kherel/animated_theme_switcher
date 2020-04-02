@@ -7,4 +7,4 @@ this answer to https://stackoverflow.com/questions/60897816/how-to-add-animation
 ![](https://i.stack.imgur.com/wEIDW.gif)
 
 How the example works:
-![](./demo.gif)
+![](demo.gif)
