@@ -1,5 +1,5 @@
 name: animated_theme_switcher_example
-description: Example of theme .
+description: This is a small demo how to create animation theme switching in telegram mobile app style.
 version: 1.0.0+1
 
 environment:
