@@ -2,6 +2,7 @@ import 'package:animated_theme_switcher_example/circle_clipper.dart';
 import 'package:flutter/material.dart';
 import 'brand_theme.dart';
 import 'brand_theme_model.dart';
+import 'brand_theme_model.dart';
 import 'brand_themes.dart';
 
 void main() => runApp(MyApp());
@@ -97,51 +98,48 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
-  _getPage(brandTheme, {isFirst = false}) {
+  Widget _getPage(BrandThemeModel brandTheme, {isFirst = false}) {
     // The isFirst bool needed to not use one global key twice
-    // The global key need to find the size and coordinates of the swicher
+    // The global key need to find the size and coordinates of the switcher
     // this need to center circle path at the right place.
-    return Scaffold(
-      backgroundColor: brandTheme.color2,
-      appBar: AppBar(
-        backgroundColor: brandTheme.color1,
-        title: Text(
-          'Flutter Demo Home Page',
-          style: TextStyle(color: brandTheme.textColor2),
+    return Theme(
+      data: brandTheme.themeData,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Flutter Demo Home Page',
+          ),
         ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-              style: TextStyle(
-                color: brandTheme.textColor1,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text(
+                'You have pushed the button this many times:',
               ),
-            ),
-            Text(
-              '$_counter',
-              style: TextStyle(color: brandTheme.textColor1, fontSize: 200),
-            ),
-            Switch(
-              key: isFirst ? switherGlobalKey : null,
-              onChanged: (needDark) {
-                oldTheme = brandTheme;
-                BrandTheme.instanceOf(context).changeTheme(
-                  needDark ? BrandThemeKey.dark : BrandThemeKey.light,
-                );
-              },
-              value: BrandTheme.of(context).brightness == Brightness.dark,
-            )
-          ],
+              Text(
+                '$_counter',
+                style: TextStyle(fontSize: 200),
+              ),
+              Switch(
+                key: isFirst ? switherGlobalKey : null,
+                onChanged: (needDark) {
+                  oldTheme = brandTheme;
+                  BrandTheme.instanceOf(context).changeTheme(
+                    needDark ? BrandThemeKey.dark : BrandThemeKey.light,
+                  );
+                },
+                value: BrandTheme.of(context).brightness == Brightness.dark,
+              )
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(
-          Icons.add,
+        floatingActionButton: FloatingActionButton(
+          onPressed: _incrementCounter,
+          tooltip: 'Increment',
+          child: Icon(
+            Icons.add,
+          ),
         ),
       ),
     );
@@ -178,6 +176,4 @@ class _MyHomePageState extends State<MyHomePage>
     }
     super.didUpdateWidget(oldWidget);
   }
-
-
 }

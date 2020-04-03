@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class CircleClipper extends CustomClipper<Path> {
   CircleClipper({this.sizeRate, this.offset});
+
   final double sizeRate;
   final Offset offset;
 
