@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'brand_themes.dart';
 import 'brand_theme_model.dart';
 
-// Inhereted widget is the 
 class BrandTheme extends StatefulWidget {
   final Widget child;
 

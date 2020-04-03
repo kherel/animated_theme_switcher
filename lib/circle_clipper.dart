@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// this clipper used to animate a growing circle, after the theme switch.
+
 class CircleClipper extends CustomClipper<Path> {
   CircleClipper({this.sizeRate, this.offset});
   final double sizeRate;

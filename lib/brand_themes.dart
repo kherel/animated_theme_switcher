@@ -3,6 +3,8 @@ import 'brand_theme_model.dart';
 
 enum BrandThemeKey { light, dark }
 
+// this is not nessesery but usefull to set theme by key
+
 class BrandThemes {
   static BrandThemeModel getThemeFromKey(BrandThemeKey themeKey) {
     switch (themeKey) {
