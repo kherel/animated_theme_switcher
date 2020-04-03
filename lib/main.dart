@@ -1,5 +1,8 @@
-import 'package:equatable/equatable.dart';
+import 'package:animated_theme_switcher_example/circle_clipper.dart';
 import 'package:flutter/material.dart';
+import 'brand_theme.dart';
+import 'brand_theme_model.dart';
+import 'brand_themes.dart';
 
 void main() => runApp(MyApp());
 
@@ -38,14 +41,12 @@ class _MyHomePageState extends State<MyHomePage>
       vsync: this,
     );
 
-    _controller.forward();
     super.initState();
   }
 
   @override
   void dispose() {
     _controller.dispose();
-
     super.dispose();
   }
 
@@ -59,7 +60,47 @@ class _MyHomePageState extends State<MyHomePage>
     });
   }
 
+  @override
+  Widget build(BuildContext context) {
+    var brandTheme = BrandTheme.of(context);
+
+    // How we main animation works:
+    // we have a stack with 2 widgets, they are the same
+    // but they are using 2 different themes
+    // A front widget is using new theme
+    // a back widget is using old theme
+    // we have animation that change a clipper
+    // The clipper clips the front widget with a path
+    // The path has a shape of circle
+    // When animation is over, we remove the back widget.
+
+    if (oldTheme == null) {
+      return _getPage(brandTheme, isFirst: true);
+    }
+    return Stack(
+      children: <Widget>[
+        _getPage(oldTheme),
+        AnimatedBuilder(
+          animation: _controller,
+          child: _getPage(brandTheme, isFirst: true),
+          builder: (_, child) {
+            return ClipPath(
+              clipper: CircleClipper(
+                sizeRate: _controller.value,
+                offset: switcherOffset,
+              ),
+              child: child,
+            );
+          },
+        ),
+      ],
+    );
+  }
+
   _getPage(brandTheme, {isFirst = false}) {
+    // The isFirst bool needed to not use one global key twice
+    // The global key need to find the size and coordinates of the swicher
+    // this need to center circle path at the right place.
     return Scaffold(
       backgroundColor: brandTheme.color2,
       appBar: AppBar(
@@ -106,238 +147,37 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
+  void _getSwitcherCoodinates() {
+    // this is how we find coordinates and size of the switcher
+    RenderBox renderObject = switherGlobalKey.currentContext.findRenderObject();
+    final size = renderObject.size;
+    switcherOffset = renderObject
+        .localToGlobal(Offset.zero)
+        .translate(size.width / 2, size.height / 2);
+  }
+
   @override
   void didUpdateWidget(Widget oldWidget) {
+    // didUpdateWidget - is lifescile that trigers after widget update with
+    // new data from parents
+    // in our case it would be new brandtheme in app context
     var theme = BrandTheme.of(context);
     if (theme != oldTheme) {
+      // if the have oldTheme it means we need to run animation
+
       _getSwitcherCoodinates();
       _controller.reset();
       _controller.forward().then(
+        // we remove oldTheme, just to not render 2 screens in stack
         (_) {
-          oldTheme = theme;
+          setState(() {
+            oldTheme = null;
+          });
         },
       );
     }
     super.didUpdateWidget(oldWidget);
   }
 
-  void _getSwitcherCoodinates() {
-    RenderBox renderObject = switherGlobalKey.currentContext.findRenderObject();
-    switcherOffset = renderObject.localToGlobal(Offset.zero);
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    var brandTheme = BrandTheme.of(context);
-
-    if (oldTheme == null) {
-      return _getPage(brandTheme, isFirst: true);
-    }
-    return Stack(
-      children: <Widget>[
-        if(oldTheme != null) _getPage(oldTheme),
-        AnimatedBuilder(
-          animation: _controller,
-          child: _getPage(brandTheme, isFirst: true),
-          builder: (_, child) {
-            return ClipPath(
-              clipper: MyClipper(
-                sizeRate: _controller.value,
-                offset: switcherOffset.translate(30, 15),
-              ),
-              child: child,
-            );
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class MyClipper extends CustomClipper<Path> {
-  MyClipper({this.sizeRate, this.offset});
-  final double sizeRate;
-  final Offset offset;
-
-  @override
-  Path getClip(Size size) {
-    var path = Path()
-      ..addOval(
-        Rect.fromCircle(center: offset, radius: size.height * sizeRate),
-      );
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
-}
-
-class BrandTheme extends StatefulWidget {
-  final Widget child;
-
-  BrandTheme({
-    Key key,
-    @required this.child,
-  }) : super(key: key);
-
-  @override
-  BrandThemeState createState() => BrandThemeState();
-
-  static BrandThemeModel of(BuildContext context) {
-    final inherited =
-        (context.dependOnInheritedWidgetOfExactType<_InheritedBrandTheme>());
-    return inherited.data.brandTheme;
-  }
-
-  static BrandThemeState instanceOf(BuildContext context) {
-    final inherited =
-        (context.dependOnInheritedWidgetOfExactType<_InheritedBrandTheme>());
-    return inherited.data;
-  }
-}
-
-class BrandThemeState extends State<BrandTheme> {
-  BrandThemeModel _brandTheme;
-
-  BrandThemeModel get brandTheme => _brandTheme;
-
-  @override
-  void initState() {
-    final isPlatformDark =
-        WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
-    final themeKey = isPlatformDark ? BrandThemeKey.dark : BrandThemeKey.light;
-    _brandTheme = BrandThemes.getThemeFromKey(themeKey);
-    super.initState();
-  }
-
-  void changeTheme(BrandThemeKey themeKey) {
-    setState(() {
-      _brandTheme = BrandThemes.getThemeFromKey(themeKey);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _InheritedBrandTheme(
-      data: this,
-      child: widget.child,
-    );
-  }
-}
-
-class _InheritedBrandTheme extends InheritedWidget {
-  final BrandThemeState data;
-
-  _InheritedBrandTheme({
-    this.data,
-    Key key,
-    @required Widget child,
-  }) : super(key: key, child: child);
-
-  @override
-  bool updateShouldNotify(_InheritedBrandTheme oldWidget) {
-    return true;
-  }
-}
-
-ThemeData defaultThemeData = ThemeData(
-  floatingActionButtonTheme: FloatingActionButtonThemeData(
-    shape: RoundedRectangleBorder(),
-  ),
-);
-
-class BrandThemeModel extends Equatable {
-  final Color color1;
-  final Color color2;
-
-  final Color textColor1;
-  final Color textColor2;
-  final ThemeData themeData;
-  final Brightness brightness;
-
-  BrandThemeModel({
-    @required this.color1,
-    @required this.color2,
-    @required this.textColor1,
-    @required this.textColor2,
-    @required this.brightness,
-  }) : themeData = defaultThemeData.copyWith(brightness: brightness);
-
-  @override
-  List<Object> get props => [
-        color1,
-        color2,
-        textColor1,
-        textColor2,
-        themeData,
-        brightness,
-      ];
-}
-
-enum BrandThemeKey { light, dark }
-
-class BrandThemes {
-  static BrandThemeModel getThemeFromKey(BrandThemeKey themeKey) {
-    switch (themeKey) {
-      case BrandThemeKey.light:
-        return lightBrandTheme;
-      case BrandThemeKey.dark:
-        return darkBrandTheme;
-      default:
-        return lightBrandTheme;
-    }
-  }
-}
-
-BrandThemeModel lightBrandTheme = BrandThemeModel(
-  brightness: Brightness.light,
-  color1: Colors.blue,
-  color2: Colors.white,
-  textColor1: Colors.black,
-  textColor2: Colors.white,
-);
-
-BrandThemeModel darkBrandTheme = BrandThemeModel(
-  brightness: Brightness.dark,
-  color1: Colors.red,
-  color2: Colors.black,
-  textColor1: Colors.blue,
-  textColor2: Colors.yellow,
-);
-
-class ThemeRoute extends PageRouteBuilder {
-  ThemeRoute(this.widget)
-      : super(
-          pageBuilder: (
-            context,
-            animation,
-            secondaryAnimation,
-          ) =>
-              widget,
-          transitionsBuilder: transitionsBuilder,
-        );
-
-  final Widget widget;
-}
-
-Widget transitionsBuilder(
-  BuildContext context,
-  Animation<double> animation,
-  Animation<double> secondaryAnimation,
-  Widget child,
-) {
-  var _animation = Tween<double>(
-    begin: 0,
-    end: 100,
-  ).animate(animation);
-  return SlideTransition(
-    position: Tween<Offset>(
-      begin: const Offset(0, 1),
-      end: Offset.zero,
-    ).animate(animation),
-    child: Container(
-      child: child,
-    ),
-  );
 }
