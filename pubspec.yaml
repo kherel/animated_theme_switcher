@@ -1,6 +1,7 @@
 name: animated_theme_switcher
 description: Flutter animated theme switcher
 version: 1.0.0+1
+homepage: https://github.com/kherel/animated_theme_switcher
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
