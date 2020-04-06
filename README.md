@@ -1,11 +1,66 @@
-# animated_theme_switcher_example
+# animated_theme_switcher
 
-This is a small demo how to create animation theme switching in telegram mobile app style
+[![Pub](https://img.shields.io/pub/v/animated_theme_switcher.svg)](https://pub.dartlang.org/packages/animated_theme_switcher)
 
-this answer to [Peyman](https://stackoverflow.com/users/4910935/peyman) question [how-to-add-animation-for-theme-switching-in-flutter](https://stackoverflow.com/questions/60897816/how-to-add-animation-for-theme-switching-in-flutter)
 
-![](https://i.stack.imgur.com/wEIDW.gif)
+Animated theme switcher.
 
-How the example works:
+This library starts from [Peyman's](https://stackoverflow.com/users/4910935/peyman) stackoverflow question [how-to-add-animation-for-theme-switching-in-flutter](https://stackoverflow.com/questions/60897816/how-to-add-animation-for-theme-switching-in-flutter)
 
-![](demo.gif)
+![demo](demo1.gif)
+
+## Getting started
+
+Add animated_theme_switcher: "^1.0.0" in your pubspec.yaml dependencies.
+
+```yaml
+dependencies:
+ animated_theme_switcher: "^1.0.0"
+```
+
+### How To Use
+
+Import the following package in your dart file
+
+```dart
+import 'package:reviews_slider/animated_theme_switcher.dart';
+```
+
+Wrap MaterialApp with ThemeProvider widget, as it has shown in the following example:
+
+```dart
+  ThemeProvider(
+      initTheme: initTheme,
+      child: Builder(builder: (context) {
+        return MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeProvider.of(context),
+          home: MyHomePage(),
+        );
+      }),
+    ),
+```
+
+Wrap the screen where you whant to make them switch with ThemeSwitchingArea widget,  as it has shown in the following example: 
+
+```dart
+    ThemeSwitchingArea(
+      child: Builder(builder: (context) {
+        return ...,
+      },
+    );
+```
+
+
+Wrap every switcher with ThemeSwitcher builder, and use provided changeTheme function to switch themes;
+
+```dart
+    ThemeSwitcher(
+      builder: (context, changeTheme) {
+        ...
+        onTap: () => changeTheme(newTheme);
+        ...
+      },
+    );
+```
+

@@ -1,5 +1,5 @@
-name: animated_theme_switcher_example
-description: This is a small demo how to create animation theme switching in telegram mobile app style.
+name: animated_theme_switcher
+description: Flutter animated theme switcher
 version: 1.0.0+1
 
 environment:
@@ -8,8 +8,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  equatable: ^1.1.1
-  cupertino_icons: ^0.1.2
 
 dev_dependencies:
   flutter_test:

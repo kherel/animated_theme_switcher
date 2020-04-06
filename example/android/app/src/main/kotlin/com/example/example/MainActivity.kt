@@ -1,4 +1,4 @@
-package com.example.animated_theme_switcher_example
+package com.example.example
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

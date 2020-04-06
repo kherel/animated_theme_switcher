@@ -1,8 +1,9 @@
-import 'package:animated_theme_switcher_example/theme_config.dart';
-import 'package:animated_theme_switcher_example/theme_provider.dart';
-import 'package:animated_theme_switcher_example/theme_switcher.dart';
-import 'package:animated_theme_switcher_example/theme_switching_area.dart';
+import 'package:animated_theme_switcher/theme_provider.dart';
+import 'package:animated_theme_switcher/theme_switcher.dart';
+import 'package:animated_theme_switcher/theme_switching_area.dart';
 import 'package:flutter/material.dart';
+
+import 'theme_config.dart';
 
 void main() => runApp(MyApp());
 

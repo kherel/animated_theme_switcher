@@ -1,4 +1,4 @@
-import 'package:animated_theme_switcher_example/theme_provider.dart';
+import 'package:animated_theme_switcher/theme_provider.dart';
 import 'package:flutter/material.dart';
 
 typedef ChangeTheme = void Function(ThemeData theme);
