@@ -11,11 +11,11 @@ This library starts from [Peyman's](https://stackoverflow.com/users/4910935/peym
 
 ## Getting started
 
-Add animated_theme_switcher: "^1.0.0" in your pubspec.yaml dependencies.
+Add animated_theme_switcher: "^1.0.2" in your pubspec.yaml dependencies.
 
 ```yaml
 dependencies:
- animated_theme_switcher: "^1.0.0"
+ animated_theme_switcher: "^1.0.2"
 ```
 
 ### How To Use

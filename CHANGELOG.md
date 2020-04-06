@@ -1,7 +1,11 @@
-## 1.0.0
+## 1.0.2
 
-- Initial version
+- longer description added
 
 ## 1.0.1
 
-- add changelog.md
+- changelog.md added
+
+## 1.0.0
+
+- Initial version
