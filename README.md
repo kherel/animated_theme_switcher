@@ -55,6 +55,11 @@ Wrap the screen where you whant to make them switch with ThemeSwitchingArea widg
 Wrap every switcher with ThemeSwitcher builder, and use provided changeTheme function to switch themes;
 
 ```dart
+
+    ThemeData newTheme = ThemeData(
+      primaryColor: Colors.amber
+    );
+    ...
     ThemeSwitcher(
       builder: (context, changeTheme) {
         ...
