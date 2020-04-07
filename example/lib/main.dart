@@ -1,6 +1,7 @@
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:animated_theme_switcher/theme_provider.dart';
+import 'package:animated_theme_switcher/theme_switcher.dart';
+import 'package:animated_theme_switcher/theme_switching_area.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart' show timeDilation;
 
 import 'theme_config.dart';
 
@@ -44,122 +45,90 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return ThemeSwitchingArea(
-      child: Scaffold(
-        drawer: Drawer(
-          child: SafeArea(
-            child: Stack(
+      child: Builder(builder: (context) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Flutter Demo Home Page',
+            ),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                Align(
-                  alignment: Alignment.topRight,
-                  child: ThemeSwitcher(
-                    builder: (context) {
-                      return IconButton(
-                        onPressed: () {
-                          ThemeSwitcher.of(context).changeTheme(
-                            theme: ThemeProvider.of(context).brightness ==
-                                    Brightness.light
-                                ? darkTheme
-                                : lightTheme,
-                          );
-                        },
-                        icon: Icon(Icons.brightness_3, size: 25),
-                      );
-                    },
-                  ),
+                Text(
+                  'You have pushed the button this many times:',
                 ),
+                Text(
+                  '$_counter',
+                  style: TextStyle(fontSize: 200),
+                ),
+                ThemeSwitcher(
+                  builder: (_, changeTheme) {
+                    return Switch(
+               
+                      onChanged: (needDark) {
+                        changeTheme(
+                          needDark ? darkTheme : lightTheme,
+                        );
+                      },
+                      value: ThemeProvider.of(context) == darkTheme,
+                    );
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    ThemeSwitcher(
+                      builder: (context, changeTheme) {
+                        return Checkbox(
+                          value: ThemeProvider.of(context) == pinkTheme,
+                          onChanged: (needPink) {
+                            changeTheme(
+                              needPink ? pinkTheme : lightTheme,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    ThemeSwitcher(
+                      builder: (context, changeTheme) {
+                        return Checkbox(
+                          value: ThemeProvider.of(context) == darkBlueTheme,
+                          onChanged: (needDarkBlue) {
+                            changeTheme(
+                              needDarkBlue ? darkBlueTheme : lightTheme,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    ThemeSwitcher(
+                      builder: (context, changeTheme) {
+                        return Checkbox(
+                          value: ThemeProvider.of(context) == halloweenTheme,
+                          onChanged: (needBlue) {
+                            changeTheme(
+                              needBlue ? halloweenTheme : lightTheme,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                )
               ],
             ),
           ),
-        ),
-        appBar: AppBar(
-          title: Text(
-            'Flutter Demo Home Page',
+          floatingActionButton: FloatingActionButton(
+            onPressed: _incrementCounter,
+            tooltip: 'Increment',
+            child: Icon(
+              Icons.add,
+            ),
           ),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Text(
-                'You have pushed the button this many times:',
-              ),
-              Text(
-                '$_counter',
-                style: TextStyle(fontSize: 200),
-              ),
-              CheckboxListTile(
-                title: Text('Slow Animation'),
-                value: timeDilation == 5.0,
-                onChanged: (value) {
-                  setState(() {
-                    timeDilation = value ? 5.0 : 1.0;
-                  });
-                },
-              ),
-              ThemeSwitcher(
-                builder: (context) {
-                  return Switch(
-                    onChanged: (needDark) {
-                      ThemeSwitcher.of(context).changeTheme(
-                        theme: needDark ? darkTheme : lightTheme,
-                      );
-                    },
-                    value: ThemeProvider.of(context) == darkTheme,
-                  );
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ThemeSwitcher(
-                    builder: (context) {
-                      return Checkbox(
-                        value: ThemeProvider.of(context) == pinkTheme,
-                        onChanged: (needPink) {
-                          ThemeSwitcher.of(context).changeTheme(
-                            theme: needPink ? pinkTheme : lightTheme,
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  ThemeSwitcher(
-                    builder: (context) {
-                      return Checkbox(
-                        value: ThemeProvider.of(context) == darkBlueTheme,
-                        onChanged: (needDarkBlue) {
-                          ThemeSwitcher.of(context).changeTheme(
-                            theme: needDarkBlue ? darkBlueTheme : lightTheme,
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  ThemeSwitcher(
-                    builder: (context) {
-                      return Checkbox(
-                        value: ThemeProvider.of(context) == halloweenTheme,
-                        onChanged: (needBlue) {
-                          ThemeSwitcher.of(context).changeTheme(
-                            theme: needBlue ? halloweenTheme : lightTheme,
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-          child: Icon(
-            Icons.add,
-          ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }
