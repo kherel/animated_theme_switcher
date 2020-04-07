@@ -2,52 +2,47 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-
 class ThemeProvider extends StatefulWidget {
-  final Widget child;
-
   ThemeProvider({
     this.initTheme,
     Key key,
     @required this.child,
-    Duration duration,
-  })  : duration = duration ?? Duration(milliseconds: 300),
+    this.duration = const Duration(milliseconds: 300),
+  })  : assert(duration != null),
         super(key: key);
 
+  final Widget child;
   final ThemeData initTheme;
   final Duration duration;
 
   @override
   ThemeProviderState createState() => ThemeProviderState();
 
-  static ThemeData of (BuildContext context) {
+  static ThemeData of(BuildContext context) {
     final inherited =
-        (context.dependOnInheritedWidgetOfExactType<_InheritedBrandTheme>());
-    return inherited.data.brandTheme;
+        context.dependOnInheritedWidgetOfExactType<_InheritedThemeProvider>();
+    return inherited.data.theme;
   }
 
   static ThemeProviderState instanceOf(BuildContext context) {
     final inherited =
-        (context.dependOnInheritedWidgetOfExactType<_InheritedBrandTheme>());
+        context.dependOnInheritedWidgetOfExactType<_InheritedThemeProvider>();
     return inherited.data;
   }
 }
 
 class ThemeProviderState extends State<ThemeProvider> {
-  ThemeData _brandTheme;
+  ThemeData theme;
+  GlobalKey switcherGlobalKey;
+  bool isBusy = false;
 
-  ThemeData get brandTheme => _brandTheme;
+  Duration get duration => widget.duration;
 
   @override
   void initState() {
-    _brandTheme = widget.initTheme;
-    duration = widget.duration;
     super.initState();
+    theme = widget.initTheme;
   }
-
-  GlobalKey switherGlobalKey;
-  Duration duration;
-  bool isBusy = false;
 
   void changeTheme({ThemeData theme, GlobalKey key}) {
     if (isBusy) {
@@ -55,35 +50,38 @@ class ThemeProviderState extends State<ThemeProvider> {
     }
     setState(() {
       isBusy = true;
-      _brandTheme = theme;
-      switherGlobalKey = key;
+      this.theme = theme;
+      switcherGlobalKey = key;
     });
 
-    Timer(widget.duration, () {
+    Timer(duration, () {
       isBusy = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return _InheritedBrandTheme(
+    return _InheritedThemeProvider(
       data: this,
-      child: widget.child,
+      child: RepaintBoundary(
+        child: widget.child,
+        key: _previewContainer,
+      ),
     );
   }
 }
 
-class _InheritedBrandTheme extends InheritedWidget {
+class _InheritedThemeProvider extends InheritedWidget {
   final ThemeProviderState data;
 
-  _InheritedBrandTheme({
+  _InheritedThemeProvider({
     this.data,
     Key key,
     @required Widget child,
   }) : super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(_InheritedBrandTheme oldWidget) {
+  bool updateShouldNotify(_InheritedThemeProvider oldWidget) {
     return true;
   }
 }
