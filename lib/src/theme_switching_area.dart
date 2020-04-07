@@ -1,5 +1,5 @@
-import 'package:animated_theme_switcher/circle_clipper.dart';
-import 'package:animated_theme_switcher/theme_provider.dart';
+import 'circle_clipper.dart';
+import 'theme_provider.dart';
 import 'package:flutter/material.dart';
 
 GlobalKey switherGlobalKey = GlobalKey();
