@@ -1,20 +1,18 @@
-import 'package:animated_theme_switcher/circle_clipper.dart';
-import 'package:animated_theme_switcher/theme_provider.dart';
+import 'circle_clipper.dart';
+import 'theme_provider.dart';
 import 'package:flutter/material.dart';
-
-GlobalKey switherGlobalKey = GlobalKey();
 
 class ThemeSwitchingArea extends StatefulWidget {
   ThemeSwitchingArea({
     Key key,
     @required this.child,
-  }) : super(key: key);
+  })  : assert(child != null),
+        super(key: key);
 
   final Widget child;
 
   @override
-  _ThemeSwitchingAreaState createState() =>
-      _ThemeSwitchingAreaState();
+  _ThemeSwitchingAreaState createState() => _ThemeSwitchingAreaState();
 }
 
 class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
@@ -23,13 +21,12 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
-
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
   }
 
   void _afterLayout(_) {
-    oldTheme = ThemeProvider.of(context);
+    _oldTheme = ThemeProvider.of(context);
     _controller = AnimationController(
       vsync: this,
       duration: ThemeProvider.instanceOf(context).duration,
@@ -43,30 +40,28 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
     super.dispose();
   }
 
-  ThemeData oldTheme;
-  Offset switcherOffset;
+  ThemeData _oldTheme;
+  Offset _switcherOffset;
 
   @override
   Widget build(BuildContext context) {
-    var brandTheme = ThemeProvider.of(context);
+    var theme = ThemeProvider.of(context);
 
-    if (oldTheme == null || oldTheme == brandTheme) {
-      return _getPage(brandTheme);
+    if (_oldTheme == null || _oldTheme == theme) {
+      return _getPage(theme);
     }
     return Material(
       child: Stack(
         children: <Widget>[
-          _getPage(
-            oldTheme,
-          ),
+          RawImage(image: ThemeProvider.instanceOf(context).image),
           AnimatedBuilder(
             animation: _controller,
-            child: _getPage(brandTheme),
+            child: _getPage(theme),
             builder: (_, child) {
               return ClipPath(
                 clipper: CircleClipper(
                   sizeRate: _controller.value,
-                  offset: switcherOffset,
+                  offset: _switcherOffset,
                 ),
                 child: child,
               );
@@ -84,10 +79,11 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
     );
   }
 
-  void _getSwitcherCoodinates(switherGlobalKey) {
-    RenderBox renderObject = switherGlobalKey.currentContext.findRenderObject();
+  void _getSwitcherCoordinates(switcherGlobalKey) {
+    RenderBox renderObject =
+        switcherGlobalKey.currentContext.findRenderObject();
     final size = renderObject.size;
-    switcherOffset = renderObject
+    _switcherOffset = renderObject
         .localToGlobal(Offset.zero)
         .translate(size.width / 2, size.height / 2);
   }
@@ -95,12 +91,13 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
   @override
   void didUpdateWidget(Widget oldWidget) {
     var theme = ThemeProvider.of(context);
-    if (theme != oldTheme) {
-      _getSwitcherCoodinates(ThemeProvider.instanceOf(context).switherGlobalKey);
+    if (theme != _oldTheme) {
+      _getSwitcherCoordinates(
+          ThemeProvider.instanceOf(context).switcherGlobalKey);
       _controller.reset();
       _controller.forward().then(
         (_) {
-          oldTheme = theme;
+          _oldTheme = theme;
         },
       );
     }

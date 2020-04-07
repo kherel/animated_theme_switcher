@@ -23,7 +23,7 @@ dependencies:
 Import the following package in your dart file
 
 ```dart
-import 'package:reviews_slider/animated_theme_switcher.dart';
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 ```
 
 Wrap MaterialApp with ThemeProvider widget, as it has shown in the following example:
@@ -41,7 +41,7 @@ Wrap MaterialApp with ThemeProvider widget, as it has shown in the following exa
     ),
 ```
 
-Wrap the screen where you whant to make them switch with ThemeSwitchingArea widget,  as it has shown in the following example: 
+Wrap the screen where you whant to make them switch with ThemeSwitchingArea widget, as it has shown in the following example: 
 
 ```dart
     ThemeSwitchingArea(
@@ -52,7 +52,7 @@ Wrap the screen where you whant to make them switch with ThemeSwitchingArea widg
 ```
 
 
-Wrap every switcher with ThemeSwitcher builder, and use provided changeTheme function to switch themes;
+Wrap every switcher with ThemeSwitcher builder, and use ThemeSwitcher.of(context).changeTheme function to switch themes;
 
 ```dart
 
@@ -61,9 +61,9 @@ Wrap every switcher with ThemeSwitcher builder, and use provided changeTheme fun
     );
     ...
     ThemeSwitcher(
-      builder: (context, changeTheme) {
+      builder: (context) {
         ...
-        onTap: () => changeTheme(newTheme);
+        onTap: () => ThemeSwitcher.of(context).changeTheme(theme: newTheme);
         ...
       },
     );
