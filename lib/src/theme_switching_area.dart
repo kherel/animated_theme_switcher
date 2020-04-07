@@ -53,7 +53,7 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
     return Material(
       child: Stack(
         children: <Widget>[
-          _getPage(_oldTheme),
+          RawImage(image: ThemeProvider.instanceOf(context).image),
           AnimatedBuilder(
             animation: _controller,
             child: _getPage(theme),

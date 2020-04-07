@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class ThemeProvider extends StatefulWidget {
   ThemeProvider({
@@ -35,8 +37,11 @@ class ThemeProviderState extends State<ThemeProvider> {
   ThemeData theme;
   GlobalKey switcherGlobalKey;
   bool isBusy = false;
+  ui.Image image;
 
   Duration get duration => widget.duration;
+
+  final _previewContainer = GlobalKey();
 
   @override
   void initState() {
@@ -44,10 +49,19 @@ class ThemeProviderState extends State<ThemeProvider> {
     theme = widget.initTheme;
   }
 
-  void changeTheme({ThemeData theme, GlobalKey key}) {
+  Future<void> _saveScreenshot() async {
+    RenderRepaintBoundary boundary =
+        _previewContainer.currentContext.findRenderObject();
+    image = await boundary.toImage();
+  }
+
+  void changeTheme({ThemeData theme, GlobalKey key}) async {
     if (isBusy) {
       return;
     }
+
+    await _saveScreenshot();
+
     setState(() {
       isBusy = true;
       this.theme = theme;
