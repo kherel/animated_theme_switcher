@@ -2,6 +2,9 @@ import 'circle_clipper.dart';
 import 'theme_provider.dart';
 import 'package:flutter/material.dart';
 
+//one more key to save drawner state
+GlobalKey globalKey = GlobalKey();
+
 class ThemeSwitchingArea extends StatefulWidget {
   ThemeSwitchingArea({
     Key key,
@@ -46,34 +49,37 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
   @override
   Widget build(BuildContext context) {
     var theme = ThemeProvider.of(context);
-
+    var children = <Widget>[];
     if (_oldTheme == null || _oldTheme == theme) {
-      return _getPage(theme);
+      children.add(_getPage(theme));
+    } else {
+      children.addAll([
+        RawImage(image: ThemeProvider.instanceOf(context).image),
+        AnimatedBuilder(
+          animation: _controller,
+          child: _getPage(theme),
+          builder: (_, child) {
+            return ClipPath(
+              clipper: CircleClipper(
+                sizeRate: _controller.value,
+                offset: _switcherOffset,
+              ),
+              child: child,
+            );
+          },
+        )
+      ]);
     }
     return Material(
       child: Stack(
-        children: <Widget>[
-          RawImage(image: ThemeProvider.instanceOf(context).image),
-          AnimatedBuilder(
-            animation: _controller,
-            child: _getPage(theme),
-            builder: (_, child) {
-              return ClipPath(
-                clipper: CircleClipper(
-                  sizeRate: _controller.value,
-                  offset: _switcherOffset,
-                ),
-                child: child,
-              );
-            },
-          ),
-        ],
+        children: children,
       ),
     );
   }
 
   Widget _getPage(ThemeData brandTheme) {
     return Theme(
+      key: globalKey,
       data: brandTheme,
       child: widget.child,
     );
@@ -102,5 +108,22 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
       );
     }
     super.didUpdateWidget(oldWidget);
+  }
+}
+
+class Testy extends StatefulWidget {
+  Testy({Key key, this.child}) : super(key: key);
+  final Widget child;
+
+  @override
+  _TestyState createState() => _TestyState();
+}
+
+class _TestyState extends State<Testy> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: widget.child,
+    );
   }
 }
