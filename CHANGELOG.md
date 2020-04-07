@@ -1,3 +1,7 @@
+## 1.0.5
+
+- fix packages
+
 ## 1.0.4
 
 - example updated
