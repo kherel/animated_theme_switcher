@@ -1,9 +1,7 @@
-import 'circle_clipper.dart';
+import 'clippers/theme_switcher_clipper_bridge.dart';
+import 'clippers/theme_switcher_circle_clipper.dart';
 import 'theme_provider.dart';
 import 'package:flutter/material.dart';
-
-//one more key to save drawner state
-GlobalKey globalKey = GlobalKey();
 
 class ThemeSwitchingArea extends StatefulWidget {
   ThemeSwitchingArea({
@@ -21,6 +19,10 @@ class ThemeSwitchingArea extends StatefulWidget {
 class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
+  bool _busy = false;
+
+  //one more key to save drawer state
+  final _globalKey = GlobalKey();
 
   @override
   void initState() {
@@ -60,9 +62,11 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
           child: _getPage(theme),
           builder: (_, child) {
             return ClipPath(
-              clipper: CircleClipper(
-                sizeRate: _controller.value,
+              clipper: ThemeSwitcherClipperBridge(
+                clipper: ThemeProvider.instanceOf(context).clipper ??
+                    const ThemeSwitcherCircleClipper(),
                 offset: _switcherOffset,
+                sizeRate: _controller.value,
               ),
               child: child,
             );
@@ -79,7 +83,7 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
 
   Widget _getPage(ThemeData brandTheme) {
     return Theme(
-      key: globalKey,
+      key: _globalKey,
       data: brandTheme,
       child: widget.child,
     );
@@ -97,33 +101,18 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
   @override
   void didUpdateWidget(Widget oldWidget) {
     var theme = ThemeProvider.of(context);
-    if (theme != _oldTheme) {
+    if (!_busy && theme != _oldTheme) {
+      _busy = true;
       _getSwitcherCoordinates(
           ThemeProvider.instanceOf(context).switcherGlobalKey);
       _controller.reset();
       _controller.forward().then(
         (_) {
+          _busy = false;
           _oldTheme = theme;
         },
       );
     }
     super.didUpdateWidget(oldWidget);
-  }
-}
-
-class Testy extends StatefulWidget {
-  Testy({Key key, this.child}) : super(key: key);
-  final Widget child;
-
-  @override
-  _TestyState createState() => _TestyState();
-}
-
-class _TestyState extends State<Testy> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: widget.child,
-    );
   }
 }

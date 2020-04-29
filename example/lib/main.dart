@@ -96,17 +96,42 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 },
               ),
-              ThemeSwitcher(
-                builder: (context) {
-                  return Switch(
-                    onChanged: (needDark) {
-                      ThemeSwitcher.of(context).changeTheme(
-                        theme: needDark ? darkTheme : lightTheme,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  ThemeSwitcher(
+                    clipper: ThemeSwitcherBoxClipper(),
+                    builder: (context) {
+                      return OutlineButton(
+                        child: Text('Box Animation'),
+                        onPressed: () {
+                          ThemeSwitcher.of(context).changeTheme(
+                            theme: ThemeProvider.of(context).brightness ==
+                                    Brightness.light
+                                ? darkTheme
+                                : lightTheme,
+                          );
+                        },
                       );
                     },
-                    value: ThemeProvider.of(context) == darkTheme,
-                  );
-                },
+                  ),
+                  ThemeSwitcher(
+                    clipper: ThemeSwitcherCircleClipper(),
+                    builder: (context) {
+                      return OutlineButton(
+                        child: Text('Circle Animation'),
+                        onPressed: () {
+                          ThemeSwitcher.of(context).changeTheme(
+                            theme: ThemeProvider.of(context).brightness ==
+                                    Brightness.light
+                                ? darkTheme
+                                : lightTheme,
+                          );
+                        },
+                      );
+                    },
+                  )
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -1,3 +1,6 @@
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+
+import 'clippers/theme_switcher_clipper.dart';
 import 'theme_provider.dart';
 import 'package:flutter/material.dart';
 
@@ -6,11 +9,14 @@ typedef ChangeTheme = void Function(ThemeData theme);
 class ThemeSwitcher extends StatefulWidget {
   const ThemeSwitcher({
     Key key,
+    this.clipper = const ThemeSwitcherCircleClipper(),
     @required this.builder,
   })  : assert(builder != null),
+        assert(clipper != null),
         super(key: key);
 
   final Widget Function(BuildContext) builder;
+  final ThemeSwitcherClipper clipper;
 
   @override
   ThemeSwitcherState createState() => ThemeSwitcherState();
@@ -40,6 +46,7 @@ class ThemeSwitcherState extends State<ThemeSwitcher> {
     ThemeProvider.instanceOf(context).changeTheme(
       theme: theme,
       key: _globalKey,
+      clipper: widget.clipper,
     );
   }
 }
