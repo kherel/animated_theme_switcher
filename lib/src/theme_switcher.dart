@@ -1,5 +1,4 @@
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
-
+import 'clippers/theme_switcher_circle_clipper.dart';
 import 'clippers/theme_switcher_clipper.dart';
 import 'theme_provider.dart';
 import 'package:flutter/material.dart';
