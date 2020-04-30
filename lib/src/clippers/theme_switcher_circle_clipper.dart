@@ -1,16 +1,14 @@
 import 'dart:math';
 import 'dart:ui';
+import 'theme_switcher_clipper.dart';
 import 'package:flutter/material.dart';
 
 @immutable
-class CircleClipper extends CustomClipper<Path> {
-  CircleClipper({this.sizeRate, this.offset});
-
-  final double sizeRate;
-  final Offset offset;
+class ThemeSwitcherCircleClipper implements ThemeSwitcherClipper {
+  const ThemeSwitcherCircleClipper();
 
   @override
-  Path getClip(Size size) {
+  Path getClip(Size size, Offset offset, double sizeRate) {
     return Path()
       ..addOval(
         Rect.fromCircle(
@@ -21,7 +19,10 @@ class CircleClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
+  bool shouldReclip(
+      CustomClipper<Path> oldClipper, Offset offset, double sizeRate) {
+    return true;
+  }
 
   static double _calcMaxRadius(Size size, Offset center) {
     final w = max(center.dx, size.width - center.dx);

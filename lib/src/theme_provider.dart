@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'clippers/theme_switcher_clipper.dart';
 
 class ThemeProvider extends StatefulWidget {
   ThemeProvider({
@@ -36,6 +37,7 @@ class ThemeProvider extends StatefulWidget {
 class ThemeProviderState extends State<ThemeProvider> {
   ThemeData theme;
   GlobalKey switcherGlobalKey;
+  ThemeSwitcherClipper clipper;
   bool isBusy = false;
   ui.Image image;
 
@@ -52,10 +54,11 @@ class ThemeProviderState extends State<ThemeProvider> {
   Future<void> _saveScreenshot() async {
     RenderRepaintBoundary boundary =
         _previewContainer.currentContext.findRenderObject();
-    image = await boundary.toImage();
+    image = await boundary.toImage(pixelRatio: 2.0);
   }
 
-  void changeTheme({ThemeData theme, GlobalKey key}) async {
+  void changeTheme(
+      {ThemeData theme, GlobalKey key, ThemeSwitcherClipper clipper}) async {
     if (isBusy) {
       return;
     }
@@ -66,6 +69,7 @@ class ThemeProviderState extends State<ThemeProvider> {
       isBusy = true;
       this.theme = theme;
       switcherGlobalKey = key;
+      this.clipper = clipper;
     });
 
     Timer(duration, () {
