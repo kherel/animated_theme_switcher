@@ -1,3 +1,8 @@
+## 1.0.6
+
+- add custom clipper 
+- change background screenshot quality
+
 ## 1.0.5
 
 - fix packages
