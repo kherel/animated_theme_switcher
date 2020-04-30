@@ -69,3 +69,14 @@ Wrap every switcher with ThemeSwitcher builder, and use ThemeSwitcher.of(context
     );
 ```
 
+Use optional named parameter clipper to pass the custom clippers.
+
+```dart
+    ...
+    ThemeSwitcher(
+      clipper: ThemeSwitcherBoxClipper(),
+      builder: (context) {
+        ...
+      },
+    );
+```
