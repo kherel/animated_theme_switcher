@@ -1,3 +1,7 @@
+## 1.0.7
+
+- add example with shared shared_preferences
+
 ## 1.0.6
 
 - add custom clipper 

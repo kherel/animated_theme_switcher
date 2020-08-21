@@ -12,51 +12,13 @@ dependencies:
 
   animated_theme_switcher:
     path: ../
-
+  shared_preferences: ^0.5.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
-
-
-
-
 flutter:
 
-  
-  
-  
   uses-material-design: true
 
-  
-  
-  
-  
-
-  
-  
-
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  

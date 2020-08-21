@@ -12,7 +12,7 @@ ThemeData pinkTheme = lightTheme.copyWith(
       backgroundColor: Color(0xFFA6E0DE),
     ),
     textTheme: TextTheme(
-      body1: TextStyle(
+      bodyText1: TextStyle(
         color: Colors.black87,
       ),
     ));
@@ -30,7 +30,7 @@ ThemeData darkBlueTheme = ThemeData.dark().copyWith(
   primaryColor: Color(0xFF1E1E2C),
   scaffoldBackgroundColor: Color(0xFF2D2D44),
   textTheme: TextTheme(
-    body1: TextStyle(
+    bodyText1: TextStyle(
       color: Color(0xFF33E1Ed),
     ),
   ),
