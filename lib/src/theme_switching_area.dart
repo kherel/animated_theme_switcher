@@ -36,7 +36,6 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
       vsync: this,
       duration: ThemeProvider.instanceOf(context).duration,
     );
-    _controller.forward();
   }
 
   @override
@@ -51,34 +50,44 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
   @override
   Widget build(BuildContext context) {
     var theme = ThemeProvider.of(context);
-    var children = <Widget>[];
+    var child;
+
     if (_oldTheme == null || _oldTheme == theme) {
-      children.add(_getPage(theme));
+      child = _getPage(theme);
     } else {
-      children.addAll([
-        RawImage(image: ThemeProvider.instanceOf(context).image),
-        AnimatedBuilder(
-          animation: _controller,
-          child: _getPage(theme),
-          builder: (_, child) {
-            return ClipPath(
-              clipper: ThemeSwitcherClipperBridge(
-                clipper: ThemeProvider.instanceOf(context).clipper ??
-                    const ThemeSwitcherCircleClipper(),
-                offset: _switcherOffset,
-                sizeRate: _controller.value,
-              ),
-              child: child,
-            );
-          },
-        )
-      ]);
+      var firstWidget, animWidget;
+
+      if (ThemeProvider.instanceOf(context).reverseAnimation) {
+        firstWidget = _getPage(theme);
+        animWidget = RawImage(image: ThemeProvider.instanceOf(context).image);
+      } else {
+        firstWidget = RawImage(image: ThemeProvider.instanceOf(context).image);
+        animWidget = _getPage(theme);
+      }
+
+      child = Stack(
+        children: [
+          firstWidget,
+          AnimatedBuilder(
+            animation: _controller,
+            child: animWidget,
+            builder: (_, child) {
+              return ClipPath(
+                clipper: ThemeSwitcherClipperBridge(
+                  clipper: ThemeProvider.instanceOf(context).clipper ??
+                      const ThemeSwitcherCircleClipper(),
+                  offset: _switcherOffset,
+                  sizeRate: _controller.value,
+                ),
+                child: child,
+              );
+            },
+          ),
+        ],
+      );
     }
-    return Material(
-      child: Stack(
-        children: children,
-      ),
-    );
+
+    return Material(child: child);
   }
 
   Widget _getPage(ThemeData brandTheme) {
@@ -100,19 +109,26 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
 
   @override
   void didUpdateWidget(Widget oldWidget) {
+    super.didUpdateWidget(oldWidget);
     var theme = ThemeProvider.of(context);
     if (!_busy && theme != _oldTheme) {
       _busy = true;
       _getSwitcherCoordinates(
           ThemeProvider.instanceOf(context).switcherGlobalKey);
-      _controller.reset();
-      _controller.forward().then(
-        (_) {
-          _busy = false;
-          _oldTheme = theme;
-        },
-      );
+      _runAnimation(theme);
     }
-    super.didUpdateWidget(oldWidget);
+  }
+
+  void _runAnimation(ThemeData theme) async {
+    if (ThemeProvider.instanceOf(context).reverseAnimation) {
+      await _controller.reverse(from: 1.0);
+    } else {
+      await _controller.forward(from: 0.0);
+    }
+
+    setState(() {
+      _busy = false;
+      _oldTheme = theme;
+    });
   }
 }

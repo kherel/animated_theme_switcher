@@ -41,11 +41,12 @@ class ThemeSwitcherState extends State<ThemeSwitcher> {
     );
   }
 
-  void changeTheme({ThemeData theme}) {
+  void changeTheme({ThemeData theme, bool reverseAnimation}) {
     ThemeProvider.instanceOf(context).changeTheme(
       theme: theme,
       key: _globalKey,
       clipper: widget.clipper,
+      reverse: reverseAnimation,
     );
   }
 }
