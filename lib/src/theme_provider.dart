@@ -40,6 +40,7 @@ class ThemeProviderState extends State<ThemeProvider> {
   ThemeSwitcherClipper clipper;
   bool isBusy = false;
   ui.Image image;
+  bool reverseAnimation;
 
   Duration get duration => widget.duration;
 
@@ -54,11 +55,15 @@ class ThemeProviderState extends State<ThemeProvider> {
   Future<void> _saveScreenshot() async {
     RenderRepaintBoundary boundary =
         _previewContainer.currentContext.findRenderObject();
-    image = await boundary.toImage(pixelRatio: 2.0);
+    image = await boundary.toImage(pixelRatio: ui.window.devicePixelRatio);
   }
 
-  void changeTheme(
-      {ThemeData theme, GlobalKey key, ThemeSwitcherClipper clipper}) async {
+  void changeTheme({
+    ThemeData theme,
+    GlobalKey key,
+    ThemeSwitcherClipper clipper,
+    bool reverse,
+  }) async {
     if (isBusy) {
       return;
     }
@@ -70,6 +75,7 @@ class ThemeProviderState extends State<ThemeProvider> {
       this.theme = theme;
       switcherGlobalKey = key;
       this.clipper = clipper;
+      reverseAnimation = reverse ?? false;
     });
 
     Timer(duration, () {

@@ -134,6 +134,47 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  ThemeSwitcher(
+                    clipper: ThemeSwitcherBoxClipper(),
+                    builder: (context) {
+                      return OutlineButton(
+                        child: Text('Box (Reverse)'),
+                        onPressed: () {
+                          var brightness = ThemeProvider.of(context).brightness;
+                          ThemeSwitcher.of(context).changeTheme(
+                            theme: brightness == Brightness.light
+                                ? darkTheme
+                                : lightTheme,
+                            reverseAnimation:
+                                brightness == Brightness.dark ? true : false,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  ThemeSwitcher(
+                    clipper: ThemeSwitcherCircleClipper(),
+                    builder: (context) {
+                      return OutlineButton(
+                        child: Text('Circle (Reverse)'),
+                        onPressed: () {
+                          var brightness = ThemeProvider.of(context).brightness;
+                          ThemeSwitcher.of(context).changeTheme(
+                            theme: brightness == Brightness.light
+                                ? darkTheme
+                                : lightTheme,
+                            reverseAnimation:
+                                brightness == Brightness.dark ? true : false,
+                          );
+                        },
+                      );
+                    },
+                  )
+                ],
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   ThemeSwitcher(
