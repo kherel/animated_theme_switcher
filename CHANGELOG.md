@@ -1,3 +1,7 @@
+## 1.0.9
+
+  - supported platforms fix
+
 ## 1.0.8
 
   - add reverse animation feature
