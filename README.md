@@ -7,7 +7,7 @@ Animated theme switcher.
 
 This library starts from [Peyman's](https://stackoverflow.com/users/4910935/peyman) stackoverflow question [how-to-add-animation-for-theme-switching-in-flutter](https://stackoverflow.com/questions/60897816/how-to-add-animation-for-theme-switching-in-flutter)
 
-![demo](demo1.gif)
+![demo](demo.gif)
 
 ## Getting started
 
@@ -63,7 +63,10 @@ Wrap every switcher with ThemeSwitcher builder, and use ThemeSwitcher.of(context
     ThemeSwitcher(
       builder: (context) {
         ...
-        onTap: () => ThemeSwitcher.of(context).changeTheme(theme: newTheme);
+        onTap: () => ThemeSwitcher.of(context).changeTheme(
+          theme: newTheme,
+          reverseAnimation: false // default: false 
+        );
         ...
       },
     );
@@ -79,4 +82,19 @@ Use optional named parameter clipper to pass the custom clippers.
         ...
       },
     );
+```
+
+Use optional named parameter clipper to pass the custom clippers.
+
+```dart
+    ...
+    ThemeSwitcher(
+      clipper: ThemeSwitcherBoxClipper(),
+      builder: (context) {
+        ...
+      },
+    );
+```
+
+
 ```

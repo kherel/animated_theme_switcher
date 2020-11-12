@@ -1,3 +1,8 @@
+## 1.0.8
+
+  - add reverse animation feature
+  - specify supported platforms // web not supported
+
 ## 1.0.7
 
 - add example with shared shared_preferences
