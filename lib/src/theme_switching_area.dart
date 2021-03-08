@@ -5,10 +5,9 @@ import 'package:flutter/material.dart';
 
 class ThemeSwitchingArea extends StatefulWidget {
   ThemeSwitchingArea({
-    Key key,
-    @required this.child,
-  })  : assert(child != null),
-        super(key: key);
+    Key? key,
+    required this.child,
+  }) : super(key: key);
 
   final Widget child;
 
@@ -18,7 +17,7 @@ class ThemeSwitchingArea extends StatefulWidget {
 
 class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
   bool _busy = false;
 
   //one more key to save drawer state
@@ -27,14 +26,14 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+    WidgetsBinding.instance!.addPostFrameCallback(_afterLayout);
   }
 
   void _afterLayout(_) {
     _oldTheme = ThemeProvider.of(context);
     _controller = AnimationController(
       vsync: this,
-      duration: ThemeProvider.instanceOf(context).duration,
+      duration: ThemeProvider.instanceOf(context)!.duration,
     );
   }
 
@@ -44,8 +43,8 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
     super.dispose();
   }
 
-  ThemeData _oldTheme;
-  Offset _switcherOffset;
+  ThemeData? _oldTheme;
+  Offset? _switcherOffset;
 
   @override
   Widget build(BuildContext context) {
@@ -53,16 +52,16 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
     var child;
 
     if (_oldTheme == null || _oldTheme == theme) {
-      child = _getPage(theme);
+      child = _getPage(theme!);
     } else {
       var firstWidget, animWidget;
 
-      if (ThemeProvider.instanceOf(context).reverseAnimation) {
-        firstWidget = _getPage(theme);
-        animWidget = RawImage(image: ThemeProvider.instanceOf(context).image);
+      if (ThemeProvider.instanceOf(context)!.reverseAnimation) {
+        firstWidget = _getPage(theme!);
+        animWidget = RawImage(image: ThemeProvider.instanceOf(context)!.image);
       } else {
-        firstWidget = RawImage(image: ThemeProvider.instanceOf(context).image);
-        animWidget = _getPage(theme);
+        firstWidget = RawImage(image: ThemeProvider.instanceOf(context)!.image);
+        animWidget = _getPage(theme!);
       }
 
       child = Stack(
@@ -74,7 +73,7 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
             builder: (_, child) {
               return ClipPath(
                 clipper: ThemeSwitcherClipperBridge(
-                  clipper: ThemeProvider.instanceOf(context).clipper ??
+                  clipper: ThemeProvider.instanceOf(context)!.clipper ??
                       const ThemeSwitcherCircleClipper(),
                   offset: _switcherOffset,
                   sizeRate: _controller.value,
@@ -109,18 +108,18 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
 
   @override
   void didUpdateWidget(Widget oldWidget) {
-    super.didUpdateWidget(oldWidget);
+    super.didUpdateWidget(oldWidget as ThemeSwitchingArea);
     var theme = ThemeProvider.of(context);
     if (!_busy && theme != _oldTheme) {
       _busy = true;
       _getSwitcherCoordinates(
-          ThemeProvider.instanceOf(context).switcherGlobalKey);
+          ThemeProvider.instanceOf(context)!.switcherGlobalKey);
       _runAnimation(theme);
     }
   }
 
-  void _runAnimation(ThemeData theme) async {
-    if (ThemeProvider.instanceOf(context).reverseAnimation) {
+  void _runAnimation(ThemeData? theme) async {
+    if (ThemeProvider.instanceOf(context)!.reverseAnimation) {
       await _controller.reverse(from: 1.0);
     } else {
       await _controller.forward(from: 0.0);
