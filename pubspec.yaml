@@ -12,14 +12,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  pedantic: 1.9.0  
+  pedantic: ^1.11.0  
 
 flutter:
   uses-material-design: true
-  plugin:
-    platforms:
-      android:
-        package: com.kherel.animated_theme_switcher
-        pluginClass: AnimatedThemeSwitcherPlugin
-      ios:
-        pluginClass: AnimatedThemeSwitcherPlugin
