@@ -9,8 +9,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final isPlatformDark =
-        WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
+    final isPlatformDark = WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
     final initTheme = isPlatformDark ? darkTheme : lightTheme;
     return ThemeProvider(
       initTheme: initTheme,
@@ -56,8 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       return IconButton(
                         onPressed: () {
                           ThemeSwitcher.of(context).changeTheme(
-                            theme: ThemeProvider.of(context).brightness ==
-                                    Brightness.light
+                            theme: ThemeProvider.of(context).brightness == Brightness.light
                                 ? darkTheme
                                 : lightTheme,
                           );
@@ -102,12 +100,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   ThemeSwitcher(
                     clipper: ThemeSwitcherBoxClipper(),
                     builder: (context) {
-                      return OutlineButton(
+                      return OutlinedButton(
                         child: Text('Box Animation'),
                         onPressed: () {
                           ThemeSwitcher.of(context).changeTheme(
-                            theme: ThemeProvider.of(context).brightness ==
-                                    Brightness.light
+                            theme: ThemeProvider.of(context).brightness == Brightness.light
                                 ? darkTheme
                                 : lightTheme,
                           );
@@ -118,12 +115,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   ThemeSwitcher(
                     clipper: ThemeSwitcherCircleClipper(),
                     builder: (context) {
-                      return OutlineButton(
+                      return OutlinedButton(
                         child: Text('Circle Animation'),
                         onPressed: () {
                           ThemeSwitcher.of(context).changeTheme(
-                            theme: ThemeProvider.of(context).brightness ==
-                                    Brightness.light
+                            theme: ThemeProvider.of(context).brightness == Brightness.light
                                 ? darkTheme
                                 : lightTheme,
                           );
@@ -139,16 +135,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   ThemeSwitcher(
                     clipper: ThemeSwitcherBoxClipper(),
                     builder: (context) {
-                      return OutlineButton(
+                      return OutlinedButton(
                         child: Text('Box (Reverse)'),
                         onPressed: () {
                           var brightness = ThemeProvider.of(context).brightness;
                           ThemeSwitcher.of(context).changeTheme(
-                            theme: brightness == Brightness.light
-                                ? darkTheme
-                                : lightTheme,
-                            reverseAnimation:
-                                brightness == Brightness.dark ? true : false,
+                            theme: brightness == Brightness.light ? darkTheme : lightTheme,
+                            reverseAnimation: brightness == Brightness.dark ? true : false,
                           );
                         },
                       );
@@ -157,16 +150,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   ThemeSwitcher(
                     clipper: ThemeSwitcherCircleClipper(),
                     builder: (context) {
-                      return OutlineButton(
+                      return OutlinedButton(
                         child: Text('Circle (Reverse)'),
                         onPressed: () {
                           var brightness = ThemeProvider.of(context).brightness;
                           ThemeSwitcher.of(context).changeTheme(
-                            theme: brightness == Brightness.light
-                                ? darkTheme
-                                : lightTheme,
-                            reverseAnimation:
-                                brightness == Brightness.dark ? true : false,
+                            theme: brightness == Brightness.light ? darkTheme : lightTheme,
+                            reverseAnimation: brightness == Brightness.dark ? true : false,
                           );
                         },
                       );
