@@ -87,8 +87,8 @@ class ThemeProviderState extends State<ThemeProvider> {
     return _InheritedThemeProvider(
       data: this,
       child: RepaintBoundary(
-        child: widget.child,
         key: _previewContainer,
+        child: widget.child,
       ),
     );
   }
