@@ -1,3 +1,8 @@
+## 2.0.0-nullsafety.0
+  - Removed unnecessary 'android' and 'ios' folders
+  - Migrated to null-safety
+  - Removed deprecated code
+  
 ## 1.0.9
 
   - supported platforms fix
