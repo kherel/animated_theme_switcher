@@ -4,7 +4,7 @@ version: 1.0.9
 homepage: https://github.com/kherel/animated_theme_switcher
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.20.0 <2.0.0"
 
 dependencies:
@@ -12,14 +12,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  pedantic: 1.9.0  
+  pedantic: ^1.11.0  
 
 flutter:
   uses-material-design: true
-  plugin:
-    platforms:
-      android:
-        package: com.kherel.animated_theme_switcher
-        pluginClass: AnimatedThemeSwitcherPlugin
-      ios:
-        pluginClass: AnimatedThemeSwitcherPlugin

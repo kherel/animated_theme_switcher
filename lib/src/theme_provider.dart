@@ -8,39 +8,38 @@ import 'clippers/theme_switcher_clipper.dart';
 class ThemeProvider extends StatefulWidget {
   ThemeProvider({
     this.initTheme,
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.duration = const Duration(milliseconds: 300),
-  })  : assert(duration != null),
-        super(key: key);
+  }) : super(key: key);
 
   final Widget child;
-  final ThemeData initTheme;
+  final ThemeData? initTheme;
   final Duration duration;
 
   @override
   ThemeProviderState createState() => ThemeProviderState();
 
-  static ThemeData of(BuildContext context) {
+  static ThemeData? of(BuildContext context) {
     final inherited =
-        context.dependOnInheritedWidgetOfExactType<_InheritedThemeProvider>();
-    return inherited.data.theme;
+        context.dependOnInheritedWidgetOfExactType<_InheritedThemeProvider>()!;
+    return inherited.data!.theme;
   }
 
-  static ThemeProviderState instanceOf(BuildContext context) {
+  static ThemeProviderState? instanceOf(BuildContext context) {
     final inherited =
-        context.dependOnInheritedWidgetOfExactType<_InheritedThemeProvider>();
+        context.dependOnInheritedWidgetOfExactType<_InheritedThemeProvider>()!;
     return inherited.data;
   }
 }
 
 class ThemeProviderState extends State<ThemeProvider> {
-  ThemeData theme;
-  GlobalKey switcherGlobalKey;
-  ThemeSwitcherClipper clipper;
+  ThemeData? theme;
+  GlobalKey? switcherGlobalKey;
+  ThemeSwitcherClipper? clipper;
   bool isBusy = false;
-  ui.Image image;
-  bool reverseAnimation;
+  ui.Image? image;
+  late bool reverseAnimation;
 
   Duration get duration => widget.duration;
 
@@ -53,16 +52,16 @@ class ThemeProviderState extends State<ThemeProvider> {
   }
 
   Future<void> _saveScreenshot() async {
-    RenderRepaintBoundary boundary =
-        _previewContainer.currentContext.findRenderObject();
+    final boundary = _previewContainer.currentContext!.findRenderObject()
+        as RenderRepaintBoundary;
     image = await boundary.toImage(pixelRatio: ui.window.devicePixelRatio);
   }
 
   void changeTheme({
-    ThemeData theme,
-    GlobalKey key,
-    ThemeSwitcherClipper clipper,
-    bool reverse,
+    ThemeData? theme,
+    GlobalKey? key,
+    ThemeSwitcherClipper? clipper,
+    bool? reverse,
   }) async {
     if (isBusy) {
       return;
@@ -88,20 +87,20 @@ class ThemeProviderState extends State<ThemeProvider> {
     return _InheritedThemeProvider(
       data: this,
       child: RepaintBoundary(
-        child: widget.child,
         key: _previewContainer,
+        child: widget.child,
       ),
     );
   }
 }
 
 class _InheritedThemeProvider extends InheritedWidget {
-  final ThemeProviderState data;
+  final ThemeProviderState? data;
 
   _InheritedThemeProvider({
     this.data,
-    Key key,
-    @required Widget child,
+    Key? key,
+    required Widget child,
   }) : super(key: key, child: child);
 
   @override

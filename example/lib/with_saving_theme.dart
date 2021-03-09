@@ -36,8 +36,7 @@ class ThemeService {
   String get previousThemeName {
     String themeName = prefs.getString('previousThemeName');
     if (themeName == null) {
-      final isPlatformDark =
-          WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
+      final isPlatformDark = WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
       themeName = isPlatformDark ? 'light' : 'dark';
     }
     return themeName;
@@ -46,8 +45,7 @@ class ThemeService {
   get initial {
     String themeName = prefs.getString('theme');
     if (themeName == null) {
-      final isPlatformDark =
-          WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
+      final isPlatformDark = WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
       themeName = isPlatformDark ? 'dark' : 'light';
     }
     return allThemes[themeName];
@@ -113,11 +111,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) {
                       return IconButton(
                         onPressed: () async {
-                          var themeName =
-                              ThemeProvider.of(context).brightness ==
-                                      Brightness.light
-                                  ? 'dark'
-                                  : 'light';
+                          var themeName = ThemeProvider.of(context).brightness == Brightness.light
+                              ? 'dark'
+                              : 'light';
                           var service = await ThemeService.instance
                             ..save(themeName);
                           var theme = service.getByName(themeName);
@@ -163,14 +159,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   ThemeSwitcher(
                     clipper: ThemeSwitcherBoxClipper(),
                     builder: (context) {
-                      return OutlineButton(
+                      return OutlinedButton(
                         child: Text('Box Animation'),
                         onPressed: () async {
-                          var themeName =
-                              ThemeProvider.of(context).brightness ==
-                                      Brightness.light
-                                  ? 'dark'
-                                  : 'light';
+                          var themeName = ThemeProvider.of(context).brightness == Brightness.light
+                              ? 'dark'
+                              : 'light';
                           var service = await ThemeService.instance
                             ..save(themeName);
                           var theme = service.getByName(themeName);
@@ -182,14 +176,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   ThemeSwitcher(
                     clipper: ThemeSwitcherCircleClipper(),
                     builder: (context) {
-                      return OutlineButton(
+                      return OutlinedButton(
                         child: Text('Circle Animation'),
                         onPressed: () async {
-                          var themeName =
-                              ThemeProvider.of(context).brightness ==
-                                      Brightness.light
-                                  ? 'dark'
-                                  : 'light';
+                          var themeName = ThemeProvider.of(context).brightness == Brightness.light
+                              ? 'dark'
+                              : 'light';
                           var service = await ThemeService.instance
                             ..save(themeName);
                           var theme = service.getByName(themeName);

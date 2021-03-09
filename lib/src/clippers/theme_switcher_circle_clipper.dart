@@ -8,19 +8,19 @@ class ThemeSwitcherCircleClipper implements ThemeSwitcherClipper {
   const ThemeSwitcherCircleClipper();
 
   @override
-  Path getClip(Size size, Offset offset, double sizeRate) {
+  Path getClip(Size size, Offset? offset, double? sizeRate) {
     return Path()
       ..addOval(
         Rect.fromCircle(
-          center: offset,
-          radius: lerpDouble(0, _calcMaxRadius(size, offset), sizeRate),
+          center: offset!,
+          radius: lerpDouble(0, _calcMaxRadius(size, offset), sizeRate!)!,
         ),
       );
   }
 
   @override
   bool shouldReclip(
-      CustomClipper<Path> oldClipper, Offset offset, double sizeRate) {
+      CustomClipper<Path> oldClipper, Offset? offset, double? sizeRate) {
     return true;
   }
 

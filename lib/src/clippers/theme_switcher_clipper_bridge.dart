@@ -5,17 +5,17 @@ import 'theme_switcher_clipper.dart';
 class ThemeSwitcherClipperBridge extends CustomClipper<Path> {
   ThemeSwitcherClipperBridge({this.sizeRate, this.offset, this.clipper});
 
-  final double sizeRate;
-  final Offset offset;
-  final ThemeSwitcherClipper clipper;
+  final double? sizeRate;
+  final Offset? offset;
+  final ThemeSwitcherClipper? clipper;
 
   @override
   Path getClip(Size size) {
-    return clipper.getClip(size, offset, sizeRate);
+    return clipper!.getClip(size, offset, sizeRate);
   }
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return clipper.shouldReclip(oldClipper, offset, sizeRate);
+    return clipper!.shouldReclip(oldClipper, offset, sizeRate);
   }
 }
