@@ -5,15 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'clippers/theme_switcher_clipper.dart';
 
+typedef ThemeBuilder = Widget Function(BuildContext, ThemeData? theme);
+
 class ThemeProvider extends StatefulWidget {
   ThemeProvider({
     this.initTheme,
     Key? key,
-    required this.child,
+    this.child,
+    this.builder,
     this.duration = const Duration(milliseconds: 300),
-  }) : super(key: key);
+  })  : assert(!(child == null && builder == null),
+            'You should provide either a child or a builder'),
+        super(key: key);
 
-  final Widget child;
+  final Widget? child;
+  final ThemeBuilder? builder;
   final ThemeData? initTheme;
   final Duration duration;
 
@@ -88,7 +94,7 @@ class ThemeProviderState extends State<ThemeProvider> {
       data: this,
       child: RepaintBoundary(
         key: _previewContainer,
-        child: widget.child,
+        child: widget.child ?? widget.builder!(context, theme),
       ),
     );
   }
