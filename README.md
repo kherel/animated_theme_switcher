@@ -31,13 +31,22 @@ Wrap MaterialApp with ThemeProvider widget, as it has shown in the following exa
 ```dart
   ThemeProvider(
       initTheme: initTheme,
-      child: Builder(builder: (context) {
+      builder: (context, myTheme) {
         return MaterialApp(
           title: 'Flutter Demo',
-          theme: ThemeProvider.of(context),
+          theme: myTheme,
           home: MyHomePage(),
         );
       }),
+    ),
+```
+
+But if all you want is to _provide_ a theme, use as follows:
+
+```dart
+  ThemeProvider(
+      initTheme: initTheme,
+      child: SomeCoolPage(),
     ),
 ```
 
