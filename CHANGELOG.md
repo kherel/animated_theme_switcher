@@ -1,3 +1,6 @@
+## 2.0.1-nullsafety.0
+  - hide builder inside themeProvider widget
+
 ## 2.0.0-nullsafety.0
   - Removed unnecessary 'android' and 'ios' folders
   - Migrated to null-safety
