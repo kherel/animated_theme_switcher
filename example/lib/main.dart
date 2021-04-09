@@ -9,17 +9,18 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final isPlatformDark = WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
+    final isPlatformDark =
+        WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
     final initTheme = isPlatformDark ? darkTheme : lightTheme;
     return ThemeProvider(
       initTheme: initTheme,
-      child: Builder(builder: (context) {
+      builder: (_, myTheme) {
         return MaterialApp(
           title: 'Flutter Demo',
-          theme: ThemeProvider.of(context),
+          theme: myTheme,
           home: MyHomePage(),
         );
-      }),
+      },
     );
   }
 }
@@ -55,7 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       return IconButton(
                         onPressed: () {
                           ThemeSwitcher.of(context).changeTheme(
-                            theme: ThemeProvider.of(context).brightness == Brightness.light
+                            theme: ThemeProvider.of(context).brightness ==
+                                    Brightness.light
                                 ? darkTheme
                                 : lightTheme,
                           );
@@ -104,7 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text('Box Animation'),
                         onPressed: () {
                           ThemeSwitcher.of(context).changeTheme(
-                            theme: ThemeProvider.of(context).brightness == Brightness.light
+                            theme: ThemeProvider.of(context).brightness ==
+                                    Brightness.light
                                 ? darkTheme
                                 : lightTheme,
                           );
@@ -119,7 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Text('Circle Animation'),
                         onPressed: () {
                           ThemeSwitcher.of(context).changeTheme(
-                            theme: ThemeProvider.of(context).brightness == Brightness.light
+                            theme: ThemeProvider.of(context).brightness ==
+                                    Brightness.light
                                 ? darkTheme
                                 : lightTheme,
                           );
@@ -140,8 +144,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: () {
                           var brightness = ThemeProvider.of(context).brightness;
                           ThemeSwitcher.of(context).changeTheme(
-                            theme: brightness == Brightness.light ? darkTheme : lightTheme,
-                            reverseAnimation: brightness == Brightness.dark ? true : false,
+                            theme: brightness == Brightness.light
+                                ? darkTheme
+                                : lightTheme,
+                            reverseAnimation:
+                                brightness == Brightness.dark ? true : false,
                           );
                         },
                       );
@@ -155,8 +162,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: () {
                           var brightness = ThemeProvider.of(context).brightness;
                           ThemeSwitcher.of(context).changeTheme(
-                            theme: brightness == Brightness.light ? darkTheme : lightTheme,
-                            reverseAnimation: brightness == Brightness.dark ? true : false,
+                            theme: brightness == Brightness.light
+                                ? darkTheme
+                                : lightTheme,
+                            reverseAnimation:
+                                brightness == Brightness.dark ? true : false,
                           );
                         },
                       );
