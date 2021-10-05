@@ -1,28 +1,22 @@
 PODS:
-  - animated_theme_switcher (0.0.1):
-    - Flutter
   - Flutter (1.0.0)
   - shared_preferences (0.0.1):
     - Flutter
 
 DEPENDENCIES:
-  - animated_theme_switcher (from `.symlinks/plugins/animated_theme_switcher/ios`)
   - Flutter (from `Flutter`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
 
 EXTERNAL SOURCES:
-  animated_theme_switcher:
-    :path: ".symlinks/plugins/animated_theme_switcher/ios"
   Flutter:
     :path: Flutter
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
 
 SPEC CHECKSUMS:
-  animated_theme_switcher: d77026ff2a3c8c9d302c90a62983c5e5ca630dc8
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  shared_preferences: 5033afbb22d372e15aff8ff766df9021b845f273
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.11.2
