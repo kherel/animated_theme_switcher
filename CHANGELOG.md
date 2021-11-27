@@ -1,3 +1,7 @@
+## 2.0.2
+  - update dependencies
+  - update examples
+  - fixes
 ## 2.0.1-nullsafety.0
   - hide builder inside themeProvider widget
 
