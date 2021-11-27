@@ -7,12 +7,12 @@ class ThemeSwitcherBoxClipper implements ThemeSwitcherClipper {
   const ThemeSwitcherBoxClipper();
 
   @override
-  Path getClip(Size size, Offset? offset, double? sizeRate) {
+  Path getClip(Size size, Offset offset, double sizeRate) {
     return Path()
       ..addRect(
         Rect.fromCenter(
-          center: offset!,
-          width: size.width * 2 * sizeRate!,
+          center: offset,
+          width: size.width * 2 * sizeRate,
           height: size.height * 2 * sizeRate,
         ),
       );

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'clippers/theme_switcher_clipper.dart';
@@ -8,109 +9,136 @@ import 'clippers/theme_switcher_clipper.dart';
 typedef ThemeBuilder = Widget Function(BuildContext, ThemeData theme);
 
 class ThemeProvider extends StatefulWidget {
-  ThemeProvider({
-    required this.initTheme,
+  const ThemeProvider({
     Key? key,
-    this.child,
     this.builder,
+    this.child,
+    required this.initTheme,
     this.duration = const Duration(milliseconds: 300),
-  })  : assert(!(child == null && builder == null),
-            'You should provide either a child or a builder'),
-        super(key: key);
+  }) : super(key: key);
 
-  final Widget? child;
   final ThemeBuilder? builder;
+  final Widget? child;
   final ThemeData initTheme;
   final Duration duration;
 
   @override
-  ThemeProviderState createState() => ThemeProviderState();
-
-  static ThemeData of(BuildContext context) {
-    final inherited =
-        context.dependOnInheritedWidgetOfExactType<_InheritedThemeProvider>()!;
-    return inherited.data.theme;
-  }
-
-  static ThemeProviderState instanceOf(BuildContext context) {
-    final inherited =
-        context.dependOnInheritedWidgetOfExactType<_InheritedThemeProvider>()!;
-    return inherited.data;
-  }
+  State<ThemeProvider> createState() => _ThemeProviderState();
 }
 
-class ThemeProviderState extends State<ThemeProvider> {
-  late ThemeData theme;
-  GlobalKey? switcherGlobalKey;
-  ThemeSwitcherClipper? clipper;
-  bool isBusy = false;
-  ui.Image? image;
-  late bool reverseAnimation;
-
-  Duration get duration => widget.duration;
-
-  final _previewContainer = GlobalKey();
+class _ThemeProviderState extends State<ThemeProvider>
+    with TickerProviderStateMixin {
+  late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    theme = widget.initTheme;
-  }
-
-  Future<void> _saveScreenshot() async {
-    final boundary = _previewContainer.currentContext!.findRenderObject()
-        as RenderRepaintBoundary;
-    image = await boundary.toImage(pixelRatio: ui.window.devicePixelRatio);
-  }
-
-  void changeTheme({
-    required ThemeData theme,
-    GlobalKey? key,
-    ThemeSwitcherClipper? clipper,
-    bool? reverse,
-  }) async {
-    if (isBusy) {
-      return;
-    }
-
-    await _saveScreenshot();
-
-    setState(() {
-      isBusy = true;
-      this.theme = theme;
-      switcherGlobalKey = key;
-      this.clipper = clipper;
-      reverseAnimation = reverse ?? false;
-    });
-
-    Timer(duration, () {
-      isBusy = false;
-    });
+    _controller = AnimationController(
+      duration: widget.duration,
+      vsync: this,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return _InheritedThemeProvider(
-      data: this,
-      child: RepaintBoundary(
-        key: _previewContainer,
-        child: widget.child ?? widget.builder!(context, theme),
-      ),
+    var model =
+        ThemeModel(startTheme: widget.initTheme, controller: _controller);
+    return ThemeModelInheritedNotifier(
+      notifier: model,
+      child: Builder(builder: (context) {
+        var model = ThemeModelInheritedNotifier.of(context);
+        return RepaintBoundary(
+          key: model.previewContainer,
+          child: widget.child ?? widget.builder!(context, model.theme),
+        );
+      }),
     );
   }
 }
 
-class _InheritedThemeProvider extends InheritedWidget {
-  final ThemeProviderState data;
-
-  _InheritedThemeProvider({
-    required this.data,
+class ThemeModelInheritedNotifier extends InheritedNotifier<ThemeModel> {
+  const ThemeModelInheritedNotifier({
     Key? key,
+    required ThemeModel notifier,
     required Widget child,
-  }) : super(key: key, child: child);
+  }) : super(key: key, notifier: notifier, child: child);
+
+  static ThemeModel of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<ThemeModelInheritedNotifier>()!
+        .notifier!;
+  }
+}
+
+class ThemeModel extends ChangeNotifier {
+  ThemeData _theme;
+
+  late GlobalKey switcherGlobalKey;
+  late ui.Image image;
+  final previewContainer = GlobalKey();
+
+  Timer? timer;
+  ThemeSwitcherClipper clipper = const ThemeSwitcherCircleClipper();
+  final AnimationController controller;
+
+  ThemeModel({
+    required ThemeData startTheme,
+    required this.controller,
+  }) : _theme = startTheme;
+
+  ThemeData get theme => _theme;
+  ThemeData? oldTheme;
+
+  bool isReverse = false;
+  late Offset switcherOffset;
+
+  void changeTheme({
+    required ThemeData theme,
+    required GlobalKey key,
+    ThemeSwitcherClipper? clipper,
+    required bool isReverse,
+  }) async {
+    if (controller.isAnimating) {
+      return;
+    }
+
+    if (clipper != null) {
+      this.clipper = clipper;
+    }
+    this.isReverse = isReverse;
+
+    oldTheme = _theme;
+    _theme = theme;
+    switcherOffset = _getSwitcherCoordinates(key);
+    await _saveScreenshot();
+
+    if (isReverse) {
+      await controller.reverse(from: 1.0);
+    } else {
+      await controller.forward(from: 0.0);
+    }
+  }
+
+  Future<void> _saveScreenshot() async {
+    final boundary = previewContainer.currentContext!.findRenderObject()
+        as RenderRepaintBoundary;
+    image = await boundary.toImage(pixelRatio: ui.window.devicePixelRatio);
+    notifyListeners();
+  }
 
   @override
-  bool updateShouldNotify(_InheritedThemeProvider oldWidget) {
-    return true;
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  Offset _getSwitcherCoordinates(
+      GlobalKey<State<StatefulWidget>> switcherGlobalKey) {
+    final renderObject =
+        switcherGlobalKey.currentContext!.findRenderObject()! as RenderBox;
+    final size = renderObject.size;
+    return renderObject
+        .localToGlobal(Offset.zero)
+        .translate(size.width / 2, size.height / 2);
   }
 }

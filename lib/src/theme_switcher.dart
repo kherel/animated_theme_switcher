@@ -39,12 +39,12 @@ class ThemeSwitcherState extends State<ThemeSwitcher> {
     );
   }
 
-  void changeTheme({required ThemeData theme, bool? reverseAnimation}) {
-    ThemeProvider.instanceOf(context).changeTheme(
+  void changeTheme({required ThemeData theme, bool isReverse = false}) {
+    ThemeModelInheritedNotifier.of(context).changeTheme(
       theme: theme,
       key: _globalKey,
       clipper: widget.clipper,
-      reverse: reverseAnimation,
+      isReverse: isReverse,
     );
   }
 }
