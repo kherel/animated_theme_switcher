@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'clippers/theme_switcher_clipper.dart';
 
-typedef ThemeBuilder = Widget Function(BuildContext, ThemeData? theme);
+typedef ThemeBuilder = Widget Function(BuildContext, ThemeData theme);
 
 class ThemeProvider extends StatefulWidget {
   ThemeProvider({
-    this.initTheme,
+    required this.initTheme,
     Key? key,
     this.child,
     this.builder,
@@ -20,19 +20,19 @@ class ThemeProvider extends StatefulWidget {
 
   final Widget? child;
   final ThemeBuilder? builder;
-  final ThemeData? initTheme;
+  final ThemeData initTheme;
   final Duration duration;
 
   @override
   ThemeProviderState createState() => ThemeProviderState();
 
-  static ThemeData? of(BuildContext context) {
+  static ThemeData of(BuildContext context) {
     final inherited =
         context.dependOnInheritedWidgetOfExactType<_InheritedThemeProvider>()!;
-    return inherited.data!.theme;
+    return inherited.data.theme;
   }
 
-  static ThemeProviderState? instanceOf(BuildContext context) {
+  static ThemeProviderState instanceOf(BuildContext context) {
     final inherited =
         context.dependOnInheritedWidgetOfExactType<_InheritedThemeProvider>()!;
     return inherited.data;
@@ -40,7 +40,7 @@ class ThemeProvider extends StatefulWidget {
 }
 
 class ThemeProviderState extends State<ThemeProvider> {
-  ThemeData? theme;
+  late ThemeData theme;
   GlobalKey? switcherGlobalKey;
   ThemeSwitcherClipper? clipper;
   bool isBusy = false;
@@ -64,7 +64,7 @@ class ThemeProviderState extends State<ThemeProvider> {
   }
 
   void changeTheme({
-    ThemeData? theme,
+    required ThemeData theme,
     GlobalKey? key,
     ThemeSwitcherClipper? clipper,
     bool? reverse,
@@ -101,10 +101,10 @@ class ThemeProviderState extends State<ThemeProvider> {
 }
 
 class _InheritedThemeProvider extends InheritedWidget {
-  final ThemeProviderState? data;
+  final ThemeProviderState data;
 
   _InheritedThemeProvider({
-    this.data,
+    required this.data,
     Key? key,
     required Widget child,
   }) : super(key: key, child: child);

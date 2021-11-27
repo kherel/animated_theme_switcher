@@ -14,15 +14,15 @@ void main() async {
 
 class ThemeService {
   ThemeService._();
+  static late SharedPreferences prefs;
+  static ThemeService? _instance;
 
-  static SharedPreferences prefs;
-  static ThemeService _instance;
   static Future<ThemeService> get instance async {
     if (_instance == null) {
       prefs = await SharedPreferences.getInstance();
       _instance = ThemeService._();
     }
-    return _instance;
+    return _instance!;
   }
 
   final allThemes = <String, ThemeData>{
@@ -34,20 +34,20 @@ class ThemeService {
   };
 
   String get previousThemeName {
-    String themeName = prefs.getString('previousThemeName');
+    String? themeName = prefs.getString('previousThemeName');
     if (themeName == null) {
       final isPlatformDark =
-          WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
+          WidgetsBinding.instance!.window.platformBrightness == Brightness.dark;
       themeName = isPlatformDark ? 'light' : 'dark';
     }
     return themeName;
   }
 
   get initial {
-    String themeName = prefs.getString('theme');
+    String? themeName = prefs.getString('theme');
     if (themeName == null) {
       final isPlatformDark =
-          WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
+          WidgetsBinding.instance!.window.platformBrightness == Brightness.dark;
       themeName = isPlatformDark ? 'dark' : 'light';
     }
     return allThemes[themeName];
@@ -55,17 +55,19 @@ class ThemeService {
 
   save(String newThemeName) {
     var currentThemeName = prefs.getString('theme');
-    prefs.setString('previousThemeName', currentThemeName);
+    if (currentThemeName != null) {
+      prefs.setString('previousThemeName', currentThemeName);
+    }
     prefs.setString('theme', newThemeName);
   }
 
   ThemeData getByName(String name) {
-    return allThemes[name];
+    return allThemes[name]!;
   }
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({this.theme});
+  MyApp({required this.theme});
   final ThemeData theme;
 
   @override
@@ -84,7 +86,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -153,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 value: timeDilation == 5.0,
                 onChanged: (value) {
                   setState(() {
-                    timeDilation = value ? 5.0 : 1.0;
+                    timeDilation = value! ? 5.0 : 1.0;
                   });
                 },
               ),
@@ -211,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           var service = await ThemeService.instance;
                           ThemeData theme;
 
-                          if (needPink) {
+                          if (needPink!) {
                             service.save('pink');
                             theme = service.getByName('pink');
                           } else {
@@ -232,7 +234,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           var service = await ThemeService.instance;
                           ThemeData theme;
 
-                          if (needDarkBlue) {
+                          if (needDarkBlue!) {
                             service.save('darkBlue');
                             theme = service.getByName('darkBlue');
                           } else {
@@ -254,7 +256,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           var service = await ThemeService.instance;
                           ThemeData theme;
 
-                          if (needHalloween) {
+                          if (needHalloween!) {
                             service.save('halloween');
                             theme = service.getByName('halloween');
                           } else {

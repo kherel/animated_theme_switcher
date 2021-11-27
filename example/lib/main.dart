@@ -55,8 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) {
                       return IconButton(
                         onPressed: () {
-                          ThemeSwitcher.of(context)!.changeTheme(
-                            theme: ThemeProvider.of(context)!.brightness ==
+                          ThemeSwitcher.of(context).changeTheme(
+                            theme: ThemeProvider.of(context).brightness ==
                                     Brightness.light
                                 ? darkTheme
                                 : lightTheme,
@@ -105,8 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       return OutlinedButton(
                         child: Text('Box Animation'),
                         onPressed: () {
-                          ThemeSwitcher.of(context)!.changeTheme(
-                            theme: ThemeProvider.of(context)!.brightness ==
+                          ThemeSwitcher.of(context).changeTheme(
+                            theme: ThemeProvider.of(context).brightness ==
                                     Brightness.light
                                 ? darkTheme
                                 : lightTheme,
@@ -121,8 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       return OutlinedButton(
                         child: Text('Circle Animation'),
                         onPressed: () {
-                          ThemeSwitcher.of(context)!.changeTheme(
-                            theme: ThemeProvider.of(context)!.brightness ==
+                          ThemeSwitcher.of(context).changeTheme(
+                            theme: ThemeProvider.of(context).brightness ==
                                     Brightness.light
                                 ? darkTheme
                                 : lightTheme,
@@ -142,9 +142,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       return OutlinedButton(
                         child: Text('Box (Reverse)'),
                         onPressed: () {
-                          var brightness =
-                              ThemeProvider.of(context)!.brightness;
-                          ThemeSwitcher.of(context)!.changeTheme(
+                          var brightness = ThemeProvider.of(context).brightness;
+                          ThemeSwitcher.of(context).changeTheme(
                             theme: brightness == Brightness.light
                                 ? darkTheme
                                 : lightTheme,
@@ -161,9 +160,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       return OutlinedButton(
                         child: Text('Circle (Reverse)'),
                         onPressed: () {
-                          var brightness =
-                              ThemeProvider.of(context)!.brightness;
-                          ThemeSwitcher.of(context)!.changeTheme(
+                          var brightness = ThemeProvider.of(context).brightness;
+                          ThemeSwitcher.of(context).changeTheme(
                             theme: brightness == Brightness.light
                                 ? darkTheme
                                 : lightTheme,
@@ -184,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       return Checkbox(
                         value: ThemeProvider.of(context) == pinkTheme,
                         onChanged: (needPink) {
-                          ThemeSwitcher.of(context)!.changeTheme(
+                          ThemeSwitcher.of(context).changeTheme(
                             theme: needPink != null && needPink
                                 ? pinkTheme
                                 : lightTheme,
@@ -198,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       return Checkbox(
                         value: ThemeProvider.of(context) == darkBlueTheme,
                         onChanged: (needDarkBlue) {
-                          ThemeSwitcher.of(context)!.changeTheme(
+                          ThemeSwitcher.of(context).changeTheme(
                             theme: needDarkBlue != null && needDarkBlue
                                 ? darkBlueTheme
                                 : lightTheme,
@@ -212,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       return Checkbox(
                         value: ThemeProvider.of(context) == halloweenTheme,
                         onChanged: (needBlue) {
-                          ThemeSwitcher.of(context)!.changeTheme(
+                          ThemeSwitcher.of(context).changeTheme(
                             theme: needBlue != null && needBlue
                                 ? halloweenTheme
                                 : lightTheme,

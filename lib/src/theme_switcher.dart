@@ -18,7 +18,7 @@ class ThemeSwitcher extends StatefulWidget {
   @override
   ThemeSwitcherState createState() => ThemeSwitcherState();
 
-  static ThemeSwitcherState? of(BuildContext context) {
+  static ThemeSwitcherState of(BuildContext context) {
     final inherited =
         context.dependOnInheritedWidgetOfExactType<_InheritedThemeSwitcher>()!;
     return inherited.data;
@@ -39,8 +39,8 @@ class ThemeSwitcherState extends State<ThemeSwitcher> {
     );
   }
 
-  void changeTheme({ThemeData? theme, bool? reverseAnimation}) {
-    ThemeProvider.instanceOf(context)!.changeTheme(
+  void changeTheme({required ThemeData theme, bool? reverseAnimation}) {
+    ThemeProvider.instanceOf(context).changeTheme(
       theme: theme,
       key: _globalKey,
       clipper: widget.clipper,
@@ -50,10 +50,10 @@ class ThemeSwitcherState extends State<ThemeSwitcher> {
 }
 
 class _InheritedThemeSwitcher extends InheritedWidget {
-  final ThemeSwitcherState? data;
+  final ThemeSwitcherState data;
 
   _InheritedThemeSwitcher({
-    this.data,
+    required this.data,
     Key? key,
     required Widget child,
   }) : super(key: key, child: child);

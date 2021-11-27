@@ -33,7 +33,7 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
     _oldTheme = ThemeProvider.of(context);
     _controller = AnimationController(
       vsync: this,
-      duration: ThemeProvider.instanceOf(context)!.duration,
+      duration: ThemeProvider.instanceOf(context).duration,
     );
   }
 
@@ -52,16 +52,16 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
     var child;
 
     if (_oldTheme == null || _oldTheme == theme) {
-      child = _getPage(theme!);
+      child = _getPage(theme);
     } else {
       var firstWidget, animWidget;
 
-      if (ThemeProvider.instanceOf(context)!.reverseAnimation) {
-        firstWidget = _getPage(theme!);
-        animWidget = RawImage(image: ThemeProvider.instanceOf(context)!.image);
+      if (ThemeProvider.instanceOf(context).reverseAnimation) {
+        firstWidget = _getPage(theme);
+        animWidget = RawImage(image: ThemeProvider.instanceOf(context).image);
       } else {
-        firstWidget = RawImage(image: ThemeProvider.instanceOf(context)!.image);
-        animWidget = _getPage(theme!);
+        firstWidget = RawImage(image: ThemeProvider.instanceOf(context).image);
+        animWidget = _getPage(theme);
       }
 
       child = Stack(
@@ -73,7 +73,7 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
             builder: (_, child) {
               return ClipPath(
                 clipper: ThemeSwitcherClipperBridge(
-                  clipper: ThemeProvider.instanceOf(context)!.clipper ??
+                  clipper: ThemeProvider.instanceOf(context).clipper ??
                       const ThemeSwitcherCircleClipper(),
                   offset: _switcherOffset,
                   sizeRate: _controller.value,
@@ -113,13 +113,13 @@ class _ThemeSwitchingAreaState extends State<ThemeSwitchingArea>
     if (!_busy && theme != _oldTheme) {
       _busy = true;
       _getSwitcherCoordinates(
-          ThemeProvider.instanceOf(context)!.switcherGlobalKey);
+          ThemeProvider.instanceOf(context).switcherGlobalKey);
       _runAnimation(theme);
     }
   }
 
   void _runAnimation(ThemeData? theme) async {
-    if (ThemeProvider.instanceOf(context)!.reverseAnimation) {
+    if (ThemeProvider.instanceOf(context).reverseAnimation) {
       await _controller.reverse(from: 1.0);
     } else {
       await _controller.forward(from: 0.0);
