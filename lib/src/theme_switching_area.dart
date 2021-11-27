@@ -15,12 +15,12 @@ class ThemeSwitchingArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = ThemeModelInheritedNotifier.of(context);
-    Widget resChild;
+    // Widget resChild;
+    Widget firstWidget;
+    Widget? animWidget;
     if (model.oldTheme == null || model.oldTheme == model.theme) {
-      resChild = _getPage(model.theme);
+      firstWidget = _getPage(model.theme);
     } else {
-      Widget firstWidget, animWidget;
-
       if (model.isReverse) {
         firstWidget = _getPage(model.theme);
         animWidget = RawImage(image: model.image);
@@ -28,11 +28,13 @@ class ThemeSwitchingArea extends StatelessWidget {
         firstWidget = RawImage(image: model.image);
         animWidget = _getPage(model.theme);
       }
-
-      resChild = Stack(
-        children: [
-          firstWidget,
+    }
+    final resChild = Stack(
+      children: [
+        firstWidget,
+        if (animWidget != null)
           AnimatedBuilder(
+            key: ValueKey('aa'),
             animation: model.controller,
             child: animWidget,
             builder: (_, child) {
@@ -46,9 +48,8 @@ class ThemeSwitchingArea extends StatelessWidget {
               );
             },
           ),
-        ],
-      );
-    }
+      ],
+    );
 
     return Material(child: resChild);
   }
