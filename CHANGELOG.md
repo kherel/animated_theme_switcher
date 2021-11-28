@@ -1,3 +1,5 @@
+## 2.0.4
+  - readme fix
 ## 2.0.3
   - fixes const Widget bug
 ## 2.0.2
