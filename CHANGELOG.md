@@ -1,3 +1,5 @@
+## 2.0.5
+  - grammar fixes )))
 ## 2.0.4
   - readme fix
 ## 2.0.3

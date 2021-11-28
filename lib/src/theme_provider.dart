@@ -89,14 +89,14 @@ class ThemeModel extends ChangeNotifier {
   ThemeData get theme => _theme;
   ThemeData? oldTheme;
 
-  bool isReverse = false;
+  bool isReversed = false;
   late Offset switcherOffset;
 
   void changeTheme({
     required ThemeData theme,
     required GlobalKey key,
     ThemeSwitcherClipper? clipper,
-    required bool isReverse,
+    required bool isReversed,
   }) async {
     if (controller.isAnimating) {
       return;
@@ -105,14 +105,14 @@ class ThemeModel extends ChangeNotifier {
     if (clipper != null) {
       this.clipper = clipper;
     }
-    this.isReverse = isReverse;
+    this.isReversed = isReversed;
 
     oldTheme = _theme;
     _theme = theme;
     switcherOffset = _getSwitcherCoordinates(key);
     await _saveScreenshot();
 
-    if (isReverse) {
+    if (isReversed) {
       await controller.reverse(from: 1.0);
     } else {
       await controller.forward(from: 0.0);

@@ -21,7 +21,7 @@ class ThemeSwitchingArea extends StatelessWidget {
       child = _getPage(model.theme);
     } else {
       late final Widget firstWidget, animWidget;
-      if (model.isReverse) {
+      if (model.isReversed) {
         firstWidget = _getPage(model.theme);
         animWidget = RawImage(image: model.image);
       } else {
