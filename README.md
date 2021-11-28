@@ -74,7 +74,7 @@ Wrap every switcher with ThemeSwitcher builder, and use ThemeSwitcher.of(context
         ...
         onTap: () => ThemeSwitcher.of(context).changeTheme(
           theme: newTheme,
-          reverseAnimation: false // default: false 
+          isReverse: false // default: false 
         );
         ...
       },
