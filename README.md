@@ -93,19 +93,6 @@ Use optional named parameter clipper to pass the custom clippers.
     );
 ```
 
-Use optional named parameter clipper to pass the custom clippers.
-
-```dart
-    ...
-    ThemeSwitcher(
-      clipper: ThemeSwitcherBoxClipper(),
-      builder: (context) {
-        ...
-      },
-    );
-```
-
-
 **Notes:**
 
 1. This package is not intended to persist selected theme on the local device. But we added [special example](https://github.com/kherel/animated_theme_switcher/blob/master/example/lib/with_saving_theme.dart) to show how to do it using [shared_preferences](https://pub.dev/packages/shared_preferences) package.
