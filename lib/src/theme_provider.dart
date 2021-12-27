@@ -74,7 +74,7 @@ class ThemeModel extends ChangeNotifier {
   ThemeData _theme;
 
   late GlobalKey switcherGlobalKey;
-  late ui.Image image;
+  ui.Image? image;
   final previewContainer = GlobalKey();
 
   Timer? timer;
