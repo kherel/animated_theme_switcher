@@ -1,4 +1,4 @@
-## 2.0.5
+## 2.0.6
   - bug fix
 ## 2.0.5
   - grammar fixes )))
