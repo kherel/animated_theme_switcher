@@ -1,4 +1,6 @@
 ## 2.0.5
+  - bug fix
+## 2.0.5
   - grammar fixes )))
 ## 2.0.4
   - readme fix
