@@ -81,6 +81,34 @@ Wrap every switcher with ThemeSwitcher builder, and use ThemeSwitcher.of(context
     );
 ```
 
+Alternatively you could use ThemeSwitcher.switcher() or ThemeSwitcher.withTheme().  
+Builders of this constructors already provide you ThemeSwitcher.  
+ThemeSwitcher.withTheme() also provides current theme:
+
+```dart
+    ThemeSwitcher.switcher(
+      builder: (context, switcher) {
+        ...
+        onTap: () => switcher.changeTheme(
+          theme: newTheme,
+        );
+        ...
+      },
+    );
+    
+    ThemeSwitcher.withTheme(
+      builder: (context, switcher, theme) {
+        ...
+        onTap: () => switcher.changeTheme(
+          theme: theme.brightness == Brightness.light
+              ? darkTheme
+              : lightTheme,
+        );
+        ...
+      },
+    );
+```
+
 Use optional named parameter clipper to pass the custom clippers.
 
 ```dart
