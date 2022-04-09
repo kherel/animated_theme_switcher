@@ -4,6 +4,10 @@ import 'theme_provider.dart';
 import 'package:flutter/material.dart';
 
 typedef ChangeTheme = void Function(ThemeData theme);
+typedef BuilderWithSwitcher = Widget Function(
+    BuildContext, ThemeSwitcherState switcher);
+typedef BuilderWithTheme = Widget Function(
+    BuildContext, ThemeSwitcherState switcher, ThemeData theme);
 
 class ThemeSwitcher extends StatefulWidget {
   const ThemeSwitcher({
@@ -11,6 +15,29 @@ class ThemeSwitcher extends StatefulWidget {
     this.clipper = const ThemeSwitcherCircleClipper(),
     required this.builder,
   }) : super(key: key);
+
+  factory ThemeSwitcher.switcher({
+    Key? key,
+    clipper = const ThemeSwitcherCircleClipper(),
+    required BuilderWithSwitcher builder,
+  }) =>
+      ThemeSwitcher(
+        key: key,
+        clipper: clipper,
+        builder: (ctx) => builder(ctx, ThemeSwitcher.of(ctx)),
+      );
+
+  factory ThemeSwitcher.withTheme({
+    Key? key,
+    clipper = const ThemeSwitcherCircleClipper(),
+    required BuilderWithTheme builder,
+  }) =>
+      ThemeSwitcher.switcher(
+        key: key,
+        clipper: clipper,
+        builder: (ctx, s) =>
+            builder(ctx, s, ThemeModelInheritedNotifier.of(ctx).theme),
+      );
 
   final Widget Function(BuildContext) builder;
   final ThemeSwitcherClipper clipper;
