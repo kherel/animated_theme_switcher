@@ -8,8 +8,8 @@ import 'theme_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final themeServise = await ThemeService.instance;
-  var initTheme = themeServise.initial;
+  final themeService = await ThemeService.instance;
+  var initTheme = themeService.initial;
   runApp(MyApp(theme: initTheme));
 }
 
