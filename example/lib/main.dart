@@ -53,19 +53,14 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 Align(
                   alignment: Alignment.topRight,
-                  child: ThemeSwitcher(
-                    builder: (context) {
+                  child: ThemeSwitcher.withTheme(
+                    builder: (_, switcher, theme) {
                       return IconButton(
-                        onPressed: () {
-                          ThemeSwitcher.of(context).changeTheme(
-                            theme: ThemeModelInheritedNotifier.of(context)
-                                        .theme
-                                        .brightness ==
-                                    Brightness.light
-                                ? darkTheme
-                                : lightTheme,
-                          );
-                        },
+                        onPressed: () => switcher.changeTheme(
+                          theme: theme.brightness == Brightness.light
+                              ? darkTheme
+                              : lightTheme,
+                        ),
                         icon: const Icon(Icons.brightness_3, size: 25),
                       );
                     },
@@ -103,13 +98,13 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  ThemeSwitcher(
+                  ThemeSwitcher.switcher(
                     clipper: const ThemeSwitcherBoxClipper(),
-                    builder: (context) {
+                    builder: (context, switcher) {
                       return OutlinedButton(
                         child: const Text('Box Animation'),
                         onPressed: () {
-                          ThemeSwitcher.of(context).changeTheme(
+                          switcher.changeTheme(
                             theme: ThemeModelInheritedNotifier.of(context)
                                         .theme
                                         .brightness ==
