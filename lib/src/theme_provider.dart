@@ -29,6 +29,7 @@ class ThemeProvider extends StatefulWidget {
 class _ThemeProviderState extends State<ThemeProvider>
     with TickerProviderStateMixin {
   late AnimationController _controller;
+  late var model;
 
   @override
   void initState() {
@@ -37,12 +38,15 @@ class _ThemeProviderState extends State<ThemeProvider>
       duration: widget.duration,
       vsync: this,
     );
+
+    model = ThemeModel(
+      startTheme: widget.initTheme,
+      controller: _controller,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    var model =
-        ThemeModel(startTheme: widget.initTheme, controller: _controller);
     return ThemeModelInheritedNotifier(
       notifier: model,
       child: Builder(builder: (context) {
