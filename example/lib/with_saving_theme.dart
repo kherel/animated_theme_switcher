@@ -38,7 +38,7 @@ class ThemeService {
     String? themeName = prefs.getString('previousThemeName');
     if (themeName == null) {
       final isPlatformDark =
-          WidgetsBinding.instance!.window.platformBrightness == Brightness.dark;
+          WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
       themeName = isPlatformDark ? 'light' : 'dark';
     }
     return themeName;
@@ -48,7 +48,7 @@ class ThemeService {
     String? themeName = prefs.getString('theme');
     if (themeName == null) {
       final isPlatformDark =
-          WidgetsBinding.instance!.window.platformBrightness == Brightness.dark;
+          WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
       themeName = isPlatformDark ? 'dark' : 'light';
     }
     return allThemes[themeName];
