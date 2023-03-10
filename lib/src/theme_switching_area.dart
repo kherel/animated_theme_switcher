@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+
 import 'clippers/theme_switcher_clipper_bridge.dart';
 import 'theme_provider.dart';
-import 'package:flutter/material.dart';
 
 class ThemeSwitchingArea extends StatelessWidget {
   ThemeSwitchingArea({
@@ -9,8 +10,6 @@ class ThemeSwitchingArea extends StatelessWidget {
   }) : super(key: key);
 
   final Widget child;
-  //one more key to save drawer state
-  final _globalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +57,7 @@ class ThemeSwitchingArea extends StatelessWidget {
 
   Widget _getPage(ThemeData brandTheme) {
     return Theme(
-      key: _globalKey,
+      key: ValueKey('ThemeSwitchingAreaPage'),
       data: brandTheme,
       child: child,
     );
