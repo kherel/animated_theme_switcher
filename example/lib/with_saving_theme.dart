@@ -93,7 +93,7 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -119,17 +119,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) {
                       return IconButton(
                         onPressed: () async {
-                          var themeName =
+                          final themeSwitcher = ThemeSwitcher.of(context);
+                          final themeName =
                               ThemeModelInheritedNotifier.of(context)
                                           .theme
                                           .brightness ==
                                       Brightness.light
                                   ? 'dark'
                                   : 'light';
-                          var service = await ThemeService.instance
+                          final service = await ThemeService.instance
                             ..save(themeName);
-                          var theme = service.getByName(themeName);
-                          ThemeSwitcher.of(context).changeTheme(theme: theme);
+                          final theme = service.getByName(themeName);
+                          themeSwitcher.changeTheme(theme: theme);
                         },
                         icon: const Icon(Icons.brightness_3, size: 25),
                       );
@@ -174,17 +175,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       return OutlinedButton(
                         child: const Text('Box Animation'),
                         onPressed: () async {
-                          var themeName =
+                          final themeSwitcher = ThemeSwitcher.of(context);
+
+                          final themeName =
                               ThemeModelInheritedNotifier.of(context)
                                           .theme
                                           .brightness ==
                                       Brightness.light
                                   ? 'dark'
                                   : 'light';
-                          var service = await ThemeService.instance
+                          final service = await ThemeService.instance
                             ..save(themeName);
-                          var theme = service.getByName(themeName);
-                          ThemeSwitcher.of(context).changeTheme(theme: theme);
+                          final theme = service.getByName(themeName);
+                          themeSwitcher.changeTheme(theme: theme);
                         },
                       );
                     },
@@ -195,17 +198,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       return OutlinedButton(
                         child: const Text('Circle Animation'),
                         onPressed: () async {
-                          var themeName =
+                          final themeSwitcher = ThemeSwitcher.of(context);
+
+                          final themeName =
                               ThemeModelInheritedNotifier.of(context)
                                           .theme
                                           .brightness ==
                                       Brightness.light
                                   ? 'dark'
                                   : 'light';
-                          var service = await ThemeService.instance
+                          final service = await ThemeService.instance
                             ..save(themeName);
-                          var theme = service.getByName(themeName);
-                          ThemeSwitcher.of(context).changeTheme(theme: theme);
+                          final theme = service.getByName(themeName);
+                          themeSwitcher.changeTheme(theme: theme);
                         },
                       );
                     },
@@ -221,18 +226,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         value: ThemeModelInheritedNotifier.of(context).theme ==
                             pinkTheme,
                         onChanged: (needPink) async {
-                          var service = await ThemeService.instance;
+                          final themeSwitcher = ThemeSwitcher.of(context);
+
+                          final service = await ThemeService.instance;
                           ThemeData theme;
 
                           if (needPink!) {
                             service.save('pink');
                             theme = service.getByName('pink');
                           } else {
-                            var previousThemeName = service.previousThemeName;
+                            final previousThemeName = service.previousThemeName;
                             service.save(previousThemeName);
                             theme = service.getByName(previousThemeName);
                           }
-                          ThemeSwitcher.of(context).changeTheme(theme: theme);
+                          themeSwitcher.changeTheme(theme: theme);
                         },
                       );
                     },
@@ -243,7 +250,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         value: ThemeModelInheritedNotifier.of(context).theme ==
                             darkBlueTheme,
                         onChanged: (needDarkBlue) async {
-                          var service = await ThemeService.instance;
+                          final themeSwitcher = ThemeSwitcher.of(context);
+
+                          final service = await ThemeService.instance;
                           ThemeData theme;
 
                           if (needDarkBlue!) {
@@ -255,7 +264,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             theme = service.getByName(previousThemeName);
                           }
 
-                          ThemeSwitcher.of(context).changeTheme(theme: theme);
+                          themeSwitcher.changeTheme(theme: theme);
                         },
                       );
                     },
@@ -266,19 +275,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         value: ThemeModelInheritedNotifier.of(context).theme ==
                             halloweenTheme,
                         onChanged: (needHalloween) async {
-                          var service = await ThemeService.instance;
+                          final themeSwitcher = ThemeSwitcher.of(context);
+                          final service = await ThemeService.instance;
                           ThemeData theme;
 
                           if (needHalloween!) {
                             service.save('halloween');
                             theme = service.getByName('halloween');
                           } else {
-                            var previousThemeName = service.previousThemeName;
+                            final previousThemeName = service.previousThemeName;
                             service.save(previousThemeName);
                             theme = service.getByName(previousThemeName);
                           }
 
-                          ThemeSwitcher.of(context).changeTheme(theme: theme);
+                          themeSwitcher.changeTheme(theme: theme);
                         },
                       );
                     },

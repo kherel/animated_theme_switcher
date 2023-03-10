@@ -1,3 +1,5 @@
+## 2.0.8
+  - key fix
 ## 2.0.7
   - hot reaload fix
 ## 2.0.6

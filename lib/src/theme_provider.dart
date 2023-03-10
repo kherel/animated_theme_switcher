@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'clippers/theme_switcher_clipper.dart';
 
 typedef ThemeBuilder = Widget Function(BuildContext, ThemeData theme);
 
