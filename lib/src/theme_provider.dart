@@ -101,6 +101,7 @@ class ThemeModel extends ChangeNotifier {
     ThemeSwitcherClipper? clipper,
     required bool isReversed,
     Offset? offset,
+    VoidCallback? onAnimationFinish,
   }) async {
     if (controller.isAnimating) {
       return;
@@ -117,9 +118,13 @@ class ThemeModel extends ChangeNotifier {
     await _saveScreenshot();
 
     if (isReversed) {
-      await controller.reverse(from: 1.0);
+      await controller
+          .reverse(from: 1.0)
+          .then((value) => onAnimationFinish?.call());
     } else {
-      await controller.forward(from: 0.0);
+      await controller
+          .forward(from: 0.0)
+          .then((value) => onAnimationFinish?.call());
     }
   }
 

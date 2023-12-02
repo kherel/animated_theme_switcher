@@ -71,14 +71,15 @@ class ThemeSwitcherState extends State<ThemeSwitcher> {
     required ThemeData theme,
     bool isReversed = false,
     Offset? offset,
+    VoidCallback? onAnimationFinish,
   }) {
     ThemeModelInheritedNotifier.of(context).changeTheme(
-      theme: theme,
-      key: _globalKey,
-      clipper: widget.clipper,
-      isReversed: isReversed,
-      offset: offset,
-    );
+        theme: theme,
+        key: _globalKey,
+        clipper: widget.clipper,
+        isReversed: isReversed,
+        offset: offset,
+        onAnimationFinish: onAnimationFinish);
   }
 }
 
