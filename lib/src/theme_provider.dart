@@ -100,6 +100,8 @@ class ThemeModel extends ChangeNotifier {
     required GlobalKey key,
     ThemeSwitcherClipper? clipper,
     required bool isReversed,
+    Offset? offset,
+    VoidCallback? onAnimationFinish,
   }) async {
     if (controller.isAnimating) {
       return;
@@ -112,13 +114,17 @@ class ThemeModel extends ChangeNotifier {
 
     oldTheme = _theme;
     _theme = theme;
-    switcherOffset = _getSwitcherCoordinates(key);
+    switcherOffset = _getSwitcherCoordinates(key, offset);
     await _saveScreenshot();
 
     if (isReversed) {
-      await controller.reverse(from: 1.0);
+      await controller
+          .reverse(from: 1.0)
+          .then((value) => onAnimationFinish?.call());
     } else {
-      await controller.forward(from: 0.0);
+      await controller
+          .forward(from: 0.0)
+          .then((value) => onAnimationFinish?.call());
     }
   }
 
@@ -136,12 +142,14 @@ class ThemeModel extends ChangeNotifier {
   }
 
   Offset _getSwitcherCoordinates(
-      GlobalKey<State<StatefulWidget>> switcherGlobalKey) {
+      GlobalKey<State<StatefulWidget>> switcherGlobalKey,
+      [Offset? tapOffset]) {
     final renderObject =
         switcherGlobalKey.currentContext!.findRenderObject()! as RenderBox;
     final size = renderObject.size;
-    return renderObject
-        .localToGlobal(Offset.zero)
-        .translate(size.width / 2, size.height / 2);
+    return renderObject.localToGlobal(Offset.zero).translate(
+          tapOffset?.dx ?? (size.width / 2),
+          tapOffset?.dy ?? (size.height / 2),
+        );
   }
 }

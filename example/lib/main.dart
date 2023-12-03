@@ -101,9 +101,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ThemeSwitcher.switcher(
                     clipper: const ThemeSwitcherBoxClipper(),
                     builder: (context, switcher) {
-                      return OutlinedButton(
+                      return TapDownButton(
                         child: const Text('Box Animation'),
-                        onPressed: () {
+                        onTap: (details) {
                           switcher.changeTheme(
                             theme: ThemeModelInheritedNotifier.of(context)
                                         .theme
@@ -111,6 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     Brightness.light
                                 ? darkTheme
                                 : lightTheme,
+                            offset: details.localPosition,
                           );
                         },
                       );
@@ -119,9 +120,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ThemeSwitcher(
                     clipper: const ThemeSwitcherCircleClipper(),
                     builder: (context) {
-                      return OutlinedButton(
+                      return TapDownButton(
                         child: const Text('Circle Animation'),
-                        onPressed: () {
+                        onTap: (details) {
                           ThemeSwitcher.of(context).changeTheme(
                             theme: ThemeModelInheritedNotifier.of(context)
                                         .theme
@@ -129,6 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     Brightness.light
                                 ? darkTheme
                                 : lightTheme,
+                            offset: details.localPosition,
                           );
                         },
                       );
@@ -142,9 +144,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ThemeSwitcher(
                     clipper: const ThemeSwitcherBoxClipper(),
                     builder: (context) {
-                      return OutlinedButton(
+                      return TapDownButton(
                         child: const Text('Box (Reverse)'),
-                        onPressed: () {
+                        onTap: (details) {
                           var brightness =
                               ThemeModelInheritedNotifier.of(context)
                                   .theme
@@ -153,6 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             theme: brightness == Brightness.light
                                 ? darkTheme
                                 : lightTheme,
+                            offset: details.localPosition,
                             isReversed:
                                 brightness == Brightness.dark ? true : false,
                           );
@@ -163,9 +166,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ThemeSwitcher(
                     clipper: const ThemeSwitcherCircleClipper(),
                     builder: (context) {
-                      return OutlinedButton(
+                      return TapDownButton(
                         child: const Text('Circle (Reverse)'),
-                        onPressed: () {
+                        onTap: (details) {
                           var brightness =
                               ThemeModelInheritedNotifier.of(context)
                                   .theme
@@ -174,6 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             theme: brightness == Brightness.light
                                 ? darkTheme
                                 : lightTheme,
+                            offset: details.localPosition,
                             isReversed:
                                 brightness == Brightness.dark ? true : false,
                           );
@@ -243,6 +247,37 @@ class _MyHomePageState extends State<MyHomePage> {
             Icons.add,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class TapDownButton extends StatelessWidget {
+  const TapDownButton({
+    Key? key,
+    required this.onTap,
+    required this.child,
+  }) : super(key: key);
+
+  final void Function(TapDownDetails details) onTap;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: 16.0,
+          horizontal: 24.0,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(24.0),
+          ),
+          border: Border.all(width: 1.0),
+        ),
+        child: child,
       ),
     );
   }

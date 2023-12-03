@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
+
 import 'clippers/theme_switcher_circle_clipper.dart';
 import 'clippers/theme_switcher_clipper.dart';
 import 'theme_provider.dart';
-import 'package:flutter/material.dart';
 
 typedef ChangeTheme = void Function(ThemeData theme);
 typedef BuilderWithSwitcher = Widget Function(
@@ -66,13 +67,19 @@ class ThemeSwitcherState extends State<ThemeSwitcher> {
     );
   }
 
-  void changeTheme({required ThemeData theme, bool isReversed = false}) {
+  void changeTheme({
+    required ThemeData theme,
+    bool isReversed = false,
+    Offset? offset,
+    VoidCallback? onAnimationFinish,
+  }) {
     ThemeModelInheritedNotifier.of(context).changeTheme(
-      theme: theme,
-      key: _globalKey,
-      clipper: widget.clipper,
-      isReversed: isReversed,
-    );
+        theme: theme,
+        key: _globalKey,
+        clipper: widget.clipper,
+        isReversed: isReversed,
+        offset: offset,
+        onAnimationFinish: onAnimationFinish);
   }
 }
 
