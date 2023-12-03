@@ -1,3 +1,6 @@
+## 2.0.9
+  - added custom offset to changeTheme method parameters
+  - added onAnimationFinish callback
 ## 2.0.8
   - key fix
 ## 2.0.7

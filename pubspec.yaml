@@ -1,10 +1,10 @@
 name: animated_theme_switcher
 description: Flutter animated theme switcher, that help to create beautiful transactions during the theme switch.
-version: 2.0.8
+version: 2.0.9
 homepage: https://github.com/kherel/animated_theme_switcher
 
 environment:
-  sdk: ">=2.14.4 <3.0.0"
+  sdk: ">=2.14.4 <4.0.0"
   flutter: ">=2.5.3"
 
 dependencies:
