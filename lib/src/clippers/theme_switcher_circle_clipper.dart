@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'theme_switcher_clipper.dart';
 import 'package:flutter/material.dart';
 
-@immutable
 class ThemeSwitcherCircleClipper implements ThemeSwitcherClipper {
   const ThemeSwitcherCircleClipper();
 

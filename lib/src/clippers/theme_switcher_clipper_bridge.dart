@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'theme_switcher_clipper.dart';
 
-@immutable
 class ThemeSwitcherClipperBridge extends CustomClipper<Path> {
   ThemeSwitcherClipperBridge(
       {required this.sizeRate, required this.offset, required this.clipper});

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'theme_switcher_clipper.dart';
 
-@immutable
 class ThemeSwitcherBoxClipper implements ThemeSwitcherClipper {
   const ThemeSwitcherBoxClipper();
 
