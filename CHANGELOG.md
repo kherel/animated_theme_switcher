@@ -1,3 +1,6 @@
+## 2.0.10
+  - remove the widget tree once the animation is finished
+
 ## 2.0.9
   - added custom offset to changeTheme method parameters
   - added onAnimationFinish callback
