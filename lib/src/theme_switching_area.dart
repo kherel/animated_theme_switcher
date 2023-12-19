@@ -16,7 +16,9 @@ class ThemeSwitchingArea extends StatelessWidget {
     final model = ThemeModelInheritedNotifier.of(context);
     // Widget resChild;
     Widget child;
-    if (model.oldTheme == null || model.oldTheme == model.theme) {
+    if (model.oldTheme == null ||
+        model.oldTheme == model.theme ||
+        !model.controller.isAnimating) {
       child = _getPage(model.theme);
     } else {
       late final Widget firstWidget, animWidget;

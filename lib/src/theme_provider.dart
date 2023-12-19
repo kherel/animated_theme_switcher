@@ -126,6 +126,8 @@ class ThemeModel extends ChangeNotifier {
           .forward(from: 0.0)
           .then((value) => onAnimationFinish?.call());
     }
+    // Notify listeners when the animation finishes.
+    notifyListeners();
   }
 
   Future<void> _saveScreenshot() async {
