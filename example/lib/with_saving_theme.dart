@@ -9,79 +9,27 @@ import 'theme_config.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final themeService = await ThemeService.instance;
-  var initTheme = themeService.initial;
-  runApp(MyApp(theme: initTheme));
-}
-
-class ThemeService {
-  ThemeService._();
-  static late SharedPreferences prefs;
-  static ThemeService? _instance;
-
-  static Future<ThemeService> get instance async {
-    if (_instance == null) {
-      prefs = await SharedPreferences.getInstance();
-      _instance = ThemeService._();
-    }
-    return _instance!;
-  }
-
-  final allThemes = <String, ThemeData>{
-    'dark': darkTheme,
-    'light': lightTheme,
-    'pink': pinkTheme,
-    'darkBlue': darkBlueTheme,
-    'halloween': halloweenTheme,
-  };
-
-  String get previousThemeName {
-    String? themeName = prefs.getString('previousThemeName');
-    if (themeName == null) {
-      final isPlatformDark =
-          WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
-      themeName = isPlatformDark ? 'light' : 'dark';
-    }
-    return themeName;
-  }
-
-  get initial {
-    String? themeName = prefs.getString('theme');
-    if (themeName == null) {
-      final isPlatformDark =
-          WidgetsBinding.instance.window.platformBrightness == Brightness.dark;
-      themeName = isPlatformDark ? 'dark' : 'light';
-    }
-    return allThemes[themeName];
-  }
-
-  save(String newThemeName) {
-    var currentThemeName = prefs.getString('theme');
-    if (currentThemeName != null) {
-      prefs.setString('previousThemeName', currentThemeName);
-    }
-    prefs.setString('theme', newThemeName);
-  }
-
-  ThemeData getByName(String name) {
-    return allThemes[name]!;
-  }
+  ThemeModel themeModel = themeService.initial;
+  runApp(MyApp(themeModel));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({
+  const MyApp(
+    this.themeModel, {
     Key? key,
-    required this.theme,
   }) : super(key: key);
-  final ThemeData theme;
+  final ThemeModel themeModel;
 
   @override
   Widget build(BuildContext context) {
     return ThemeProvider(
-      initTheme: theme,
-      builder: (_, theme) {
+      themeModel: themeModel,
+      builder: (_, themeModel) {
         return MaterialApp(
           title: 'Flutter Demo',
-          theme: theme,
+          theme: themeModel.lightTheme,
+          darkTheme: themeModel.darkTheme,
+          themeMode: themeModel.themeMode,
           home: const MyHomePage(),
         );
       },
@@ -98,6 +46,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  late Future<ThemeService> future;
+
+  Future<ThemeService> initThemeService() async {
+    return await ThemeService.instance;
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -106,9 +59,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void initState() {
+    future = initThemeService();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ThemeSwitchingArea(
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: _incrementCounter,
+          tooltip: 'Increment',
+          child: const Icon(
+            Icons.add,
+          ),
+        ),
         drawer: Drawer(
           child: SafeArea(
             child: Stack(
@@ -119,18 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) {
                       return IconButton(
                         onPressed: () async {
-                          final themeSwitcher = ThemeSwitcher.of(context);
-                          final themeName =
-                              ThemeModelInheritedNotifier.of(context)
-                                          .theme
-                                          .brightness ==
-                                      Brightness.light
-                                  ? 'dark'
-                                  : 'light';
-                          final service = await ThemeService.instance
-                            ..save(themeName);
-                          final theme = service.getByName(themeName);
-                          themeSwitcher.changeTheme(theme: theme);
+                          context.toggleThemeMode();
                         },
                         icon: const Icon(Icons.brightness_3, size: 25),
                       );
@@ -146,166 +101,269 @@ class _MyHomePageState extends State<MyHomePage> {
             'Flutter Demo Home Page',
           ),
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              const Text(
-                'You have pushed the button this many times:',
-              ),
-              Text(
-                '$_counter',
-                style: const TextStyle(fontSize: 200),
-              ),
-              CheckboxListTile(
-                title: const Text('Slow Animation'),
-                value: timeDilation == 5.0,
-                onChanged: (value) {
-                  setState(() {
-                    timeDilation = value! ? 5.0 : 1.0;
-                  });
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  ThemeSwitcher(
-                    clipper: const ThemeSwitcherBoxClipper(),
-                    builder: (context) {
-                      return OutlinedButton(
-                        child: const Text('Box Animation'),
-                        onPressed: () async {
-                          final themeSwitcher = ThemeSwitcher.of(context);
-
-                          final themeName =
-                              ThemeModelInheritedNotifier.of(context)
-                                          .theme
-                                          .brightness ==
-                                      Brightness.light
-                                  ? 'dark'
-                                  : 'light';
-                          final service = await ThemeService.instance
-                            ..save(themeName);
-                          final theme = service.getByName(themeName);
-                          themeSwitcher.changeTheme(theme: theme);
-                        },
-                      );
-                    },
-                  ),
-                  ThemeSwitcher(
-                    clipper: const ThemeSwitcherCircleClipper(),
-                    builder: (context) {
-                      return OutlinedButton(
-                        child: const Text('Circle Animation'),
-                        onPressed: () async {
-                          final themeSwitcher = ThemeSwitcher.of(context);
-
-                          final themeName =
-                              ThemeModelInheritedNotifier.of(context)
-                                          .theme
-                                          .brightness ==
-                                      Brightness.light
-                                  ? 'dark'
-                                  : 'light';
-                          final service = await ThemeService.instance
-                            ..save(themeName);
-                          final theme = service.getByName(themeName);
-                          themeSwitcher.changeTheme(theme: theme);
-                        },
-                      );
-                    },
-                  )
-                ],
-              ),
-              Row(
+        body: Column(
+          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Expanded(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ThemeSwitcher(
-                    builder: (context) {
-                      return Checkbox(
-                        value: ThemeModelInheritedNotifier.of(context).theme ==
-                            pinkTheme,
-                        onChanged: (needPink) async {
-                          final themeSwitcher = ThemeSwitcher.of(context);
-
-                          final service = await ThemeService.instance;
-                          ThemeData theme;
-
-                          if (needPink!) {
-                            service.save('pink');
-                            theme = service.getByName('pink');
-                          } else {
-                            final previousThemeName = service.previousThemeName;
-                            service.save(previousThemeName);
-                            theme = service.getByName(previousThemeName);
-                          }
-                          themeSwitcher.changeTheme(theme: theme);
-                        },
-                      );
-                    },
+                children: [
+                  const Text(
+                    'You have pushed the button this many times:',
                   ),
-                  ThemeSwitcher(
-                    builder: (context) {
-                      return Checkbox(
-                        value: ThemeModelInheritedNotifier.of(context).theme ==
-                            darkBlueTheme,
-                        onChanged: (needDarkBlue) async {
-                          final themeSwitcher = ThemeSwitcher.of(context);
-
-                          final service = await ThemeService.instance;
-                          ThemeData theme;
-
-                          if (needDarkBlue!) {
-                            service.save('darkBlue');
-                            theme = service.getByName('darkBlue');
-                          } else {
-                            var previousThemeName = service.previousThemeName;
-                            service.save(previousThemeName);
-                            theme = service.getByName(previousThemeName);
-                          }
-
-                          themeSwitcher.changeTheme(theme: theme);
-                        },
-                      );
-                    },
-                  ),
-                  ThemeSwitcher(
-                    builder: (context) {
-                      return Checkbox(
-                        value: ThemeModelInheritedNotifier.of(context).theme ==
-                            halloweenTheme,
-                        onChanged: (needHalloween) async {
-                          final themeSwitcher = ThemeSwitcher.of(context);
-                          final service = await ThemeService.instance;
-                          ThemeData theme;
-
-                          if (needHalloween!) {
-                            service.save('halloween');
-                            theme = service.getByName('halloween');
-                          } else {
-                            final previousThemeName = service.previousThemeName;
-                            service.save(previousThemeName);
-                            theme = service.getByName(previousThemeName);
-                          }
-
-                          themeSwitcher.changeTheme(theme: theme);
-                        },
-                      );
-                    },
+                  Text(
+                    '$_counter',
+                    style: const TextStyle(fontSize: 90),
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-          child: const Icon(
-            Icons.add,
-          ),
+            ),
+            Expanded(
+                flex: 2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        const Divider(height: 0),
+                        FutureBuilder(
+                            future: future,
+                            builder: (context, snapshot) {
+                              final loaded = snapshot.connectionState ==
+                                  ConnectionState.done;
+                              ThemeType? themType = snapshot.data?.getTheme();
+                              return ListTile(
+                                title: const Text('Themes'),
+                                trailing: const Icon(Icons.color_lens),
+                                subtitle: loaded
+                                    ? Text(capitilize(themType?.name ?? ''))
+                                    : const SizedBox(),
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return ThemeSwitcher(
+                                            builder: (context) {
+                                          return SimpleDialog(
+                                            title: const Text('Select Theme'),
+                                            children: ThemeType.values
+                                                .map((e) => ListTile(
+                                                      leading: Checkbox(
+                                                        value: e == themType,
+                                                        onChanged:
+                                                            (value) async {
+                                                          Navigator.pop(
+                                                              context);
+                                                          final service =
+                                                              await ThemeService
+                                                                  .instance;
+                                                          service.saveTheme(e);
+                                                          context.updateTheme(
+                                                              animateTransition:
+                                                                  false,
+                                                              lightTheme: e
+                                                                  .getThemeData
+                                                                  .$1,
+                                                              darkTheme: e
+                                                                  .getThemeData
+                                                                  .$2);
+                                                        },
+                                                      ),
+                                                      onTap: () async {
+                                                        Navigator.pop(context);
+                                                        final service =
+                                                            await ThemeService
+                                                                .instance;
+                                                        service.saveTheme(e);
+                                                        context.updateTheme(
+                                                            animateTransition:
+                                                                false,
+                                                            lightTheme: e
+                                                                .getThemeData
+                                                                .$1,
+                                                            darkTheme: e
+                                                                .getThemeData
+                                                                .$2);
+                                                      },
+                                                      title: Text(
+                                                          capitilize(e.name)),
+                                                    ))
+                                                .toList(),
+                                          );
+                                        });
+                                      });
+                                },
+                              );
+                            }),
+                        const Divider(height: 0),
+                        CheckboxListTile(
+                          title: const Text('Slow Animation'),
+                          value: timeDilation == 5.0,
+                          onChanged: (value) {
+                            setState(() {
+                              timeDilation = value! ? 5.0 : 1.0;
+                            });
+                          },
+                        ),
+                        const Divider(height: 0),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        ThemeSwitcher(
+                          clipper: const ThemeSwitcherBoxClipper(),
+                          builder: (context) {
+                            return OutlinedButton(
+                              child: const Text('Box Animation'),
+                              onPressed: () async {
+                                context.toggleThemeMode();
+                              },
+                            );
+                          },
+                        ),
+                        ThemeSwitcher(
+                          clipper: const ThemeSwitcherCircleClipper(),
+                          builder: (context) {
+                            return OutlinedButton(
+                              child: const Text('Circle Animation'),
+                              onPressed: () async {
+                                context.toggleThemeMode();
+                              },
+                            );
+                          },
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        ThemeSwitcher(
+                          clipper: const ThemeSwitcherBoxClipper(),
+                          builder: (context) {
+                            return OutlinedButton(
+                              child: const Text('Box (Reversed)'),
+                              onPressed: () async {
+                                context.toggleThemeMode(
+                                  isReversed:
+                                      context.brightness == Brightness.dark,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        ThemeSwitcher(
+                          clipper: const ThemeSwitcherCircleClipper(),
+                          builder: (context) {
+                            return OutlinedButton(
+                              child: const Text('Circle (Reversed)'),
+                              onPressed: () async {
+                                context.toggleThemeMode(
+                                  isReversed:
+                                      context.brightness == Brightness.dark,
+                                );
+                              },
+                            );
+                          },
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const Text('Theme Mode'),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: ThemeSwitcher(builder: (context) {
+                            return SegmentedButton<ThemeMode>(
+                                onSelectionChanged: (themeMode) async {
+                                  final service = await ThemeService.instance;
+                                  service.saveThemeMode(themeMode.first);
+                                  context.updateThemeMode(
+                                      themeMode: themeMode.first);
+                                },
+                                segments: ThemeMode.values
+                                    .map((e) => ButtonSegment<ThemeMode>(
+                                        value: e,
+                                        label: Text(capitilize(e.name))))
+                                    .toList(),
+                                selected: {context.themeMode});
+                          }),
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
+            const SizedBox(height: kToolbarHeight),
+          ],
         ),
       ),
     );
+  }
+
+  String capitilize(String s) {
+    return s[0].toUpperCase() + s.substring(1);
+  }
+}
+
+class ThemeService {
+  ThemeService._();
+  static late SharedPreferences prefs;
+  static ThemeService? _instance;
+
+  static Future<ThemeService> get instance async {
+    if (_instance == null) {
+      prefs = await SharedPreferences.getInstance();
+      _instance = ThemeService._();
+    }
+    return _instance!;
+  }
+
+  ThemeModel get initial {
+    final themeMode = getThemeMode();
+    final theme = getTheme();
+    ThemeData light;
+    ThemeData dark;
+    switch (theme) {
+      case ThemeType.flutterDefault:
+        light = lightTheme;
+        dark = darkTheme;
+        break;
+      case ThemeType.pink:
+        light = PinkTheme.light;
+        dark = PinkTheme.dark;
+        break;
+      case ThemeType.halloween:
+        light = HalloweenTheme.light;
+        dark = HalloweenTheme.dark;
+        break;
+      case ThemeType.blue:
+        light = BlueTheme.light;
+        dark = BlueTheme.dark;
+        break;
+      case ThemeType.yellow:
+        light = YellowTheme.light;
+        dark = YellowTheme.dark;
+        break;
+    }
+    return ThemeModel(themeMode: themeMode, lightTheme: light, darkTheme: dark);
+  }
+
+  void saveThemeMode(ThemeMode themeMode) {
+    prefs.setInt('themeMode', themeMode.index);
+  }
+
+  ThemeMode getThemeMode() {
+    final index = prefs.getInt('themeMode');
+    return ThemeMode.values[index ?? 0];
+  }
+
+  ThemeType getTheme() {
+    final index = prefs.getInt('theme');
+    return ThemeType.values[index ?? 0];
+  }
+
+  void saveTheme(ThemeType theme) {
+    prefs.setInt('theme', theme.index);
   }
 }

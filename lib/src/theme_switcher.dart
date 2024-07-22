@@ -1,14 +1,17 @@
+import 'package:animated_theme_switcher/src/extension/theme_provider_extension.dart';
 import 'package:flutter/material.dart';
 
 import 'clippers/theme_switcher_circle_clipper.dart';
 import 'clippers/theme_switcher_clipper.dart';
+import 'models/theme_model.dart';
+import 'theme_notifier.dart';
 import 'theme_provider.dart';
 
 typedef ChangeTheme = void Function(ThemeData theme);
 typedef BuilderWithSwitcher = Widget Function(
     BuildContext, ThemeSwitcherState switcher);
-typedef BuilderWithTheme = Widget Function(
-    BuildContext, ThemeSwitcherState switcher, ThemeData theme);
+typedef BuilderWithThemeModel = Widget Function(
+    BuildContext, ThemeSwitcherState switcher, ThemeModel themeModel);
 
 class ThemeSwitcher extends StatefulWidget {
   const ThemeSwitcher({
@@ -28,16 +31,16 @@ class ThemeSwitcher extends StatefulWidget {
         builder: (ctx) => builder(ctx, ThemeSwitcher.of(ctx)),
       );
 
-  factory ThemeSwitcher.withTheme({
+  factory ThemeSwitcher.withThemeModel({
     Key? key,
     clipper = const ThemeSwitcherCircleClipper(),
-    required BuilderWithTheme builder,
+    required BuilderWithThemeModel builder,
   }) =>
       ThemeSwitcher.switcher(
         key: key,
         clipper: clipper,
         builder: (ctx, s) =>
-            builder(ctx, s, ThemeModelInheritedNotifier.of(ctx).theme),
+            builder(ctx, s, ThemeModelInheritedNotifier.of(ctx).themeModel),
       );
 
   final Widget Function(BuildContext) builder;
@@ -55,6 +58,7 @@ class ThemeSwitcher extends StatefulWidget {
 
 class ThemeSwitcherState extends State<ThemeSwitcher> {
   final GlobalKey _globalKey = GlobalKey();
+  ThemeNotifier get themeNotifier => ThemeModelInheritedNotifier.of(context);
 
   @override
   Widget build(BuildContext context) {
@@ -67,16 +71,61 @@ class ThemeSwitcherState extends State<ThemeSwitcher> {
     );
   }
 
-  void changeTheme({
-    required ThemeData theme,
+  void toggleThemeMode({
+    bool animateTransition = true,
+    Offset? offset,
+    VoidCallback? onAnimationFinish,
     bool isReversed = false,
+  }) {
+    themeNotifier.changeTheme(
+        themeModel: context.brightness == Brightness.dark
+            ? themeNotifier.themeModel.copyWith(themeMode: ThemeMode.light)
+            : themeNotifier.themeModel.copyWith(themeMode: ThemeMode.dark),
+        key: _globalKey,
+        clipper: widget.clipper,
+        animateTransition: animateTransition,
+        offset: offset,
+        onAnimationFinish: onAnimationFinish,
+        isReversed: isReversed);
+  }
+
+  void updateThemeMode({
+    required ThemeMode themeMode,
+    bool animateTransition = true,
+    Offset? offset,
+    VoidCallback? onAnimationFinish,
+    bool isReversed = false,
+  }) {
+    themeNotifier.changeTheme(
+        themeModel: themeNotifier.themeModel.copyWith(themeMode: themeMode),
+        key: _globalKey,
+        clipper: widget.clipper,
+        animateTransition: animateTransition,
+        offset: offset,
+        onAnimationFinish: onAnimationFinish,
+        isReversed: isReversed);
+  }
+
+  void updateTheme({
+    ThemeData? lightTheme,
+    ThemeData? darkTheme,
+    bool isReversed = false,
+    bool animateTransition = false,
     Offset? offset,
     VoidCallback? onAnimationFinish,
   }) {
-    ThemeModelInheritedNotifier.of(context).changeTheme(
-        theme: theme,
+    if (lightTheme == null && darkTheme == null) {
+      return;
+    }
+
+    themeNotifier.changeTheme(
+        themeModel: themeNotifier.themeModel.copyWith(
+          lightTheme: lightTheme,
+          darkTheme: darkTheme,
+        ),
         key: _globalKey,
         clipper: widget.clipper,
+        animateTransition: animateTransition,
         isReversed: isReversed,
         offset: offset,
         onAnimationFinish: onAnimationFinish);

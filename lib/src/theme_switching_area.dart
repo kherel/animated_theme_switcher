@@ -13,23 +13,31 @@ class ThemeSwitchingArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = ThemeModelInheritedNotifier.of(context);
-    // Widget resChild;
-    Widget child;
-    if (model.oldTheme == null ||
-        model.oldTheme == model.theme ||
-        !model.controller.isAnimating) {
-      child = _getPage(model.theme);
+    final themeNotifier = ThemeModelInheritedNotifier.of(context);
+
+    final correctTheme = themeNotifier.themeModel.themeMode == ThemeMode.system
+        ? MediaQuery.of(context).platformBrightness == Brightness.dark
+            ? themeNotifier.themeModel.darkTheme
+            : themeNotifier.themeModel.lightTheme
+        : themeNotifier.themeModel.themeMode == ThemeMode.light
+            ? themeNotifier.themeModel.lightTheme
+            : themeNotifier.themeModel.darkTheme;
+
+    Widget _child;
+    if (themeNotifier.oldThemeModel == null ||
+        themeNotifier.oldThemeModel == themeNotifier.themeModel ||
+        !themeNotifier.controller.isAnimating) {
+      _child = _applyTheme(correctTheme);
     } else {
       late final Widget firstWidget, animWidget;
-      if (model.isReversed) {
-        firstWidget = _getPage(model.theme);
-        animWidget = RawImage(image: model.image);
+      if (themeNotifier.isReversed) {
+        firstWidget = _applyTheme(correctTheme);
+        animWidget = RawImage(image: themeNotifier.image);
       } else {
-        firstWidget = RawImage(image: model.image);
-        animWidget = _getPage(model.theme);
+        firstWidget = RawImage(image: themeNotifier.image);
+        animWidget = _applyTheme(correctTheme);
       }
-      child = Stack(
+      _child = Stack(
         children: [
           Container(
             key: ValueKey('ThemeSwitchingAreaFirstChild'),
@@ -37,14 +45,14 @@ class ThemeSwitchingArea extends StatelessWidget {
           ),
           AnimatedBuilder(
             key: ValueKey('ThemeSwitchingAreaSecondChild'),
-            animation: model.controller,
+            animation: themeNotifier.controller,
             child: animWidget,
             builder: (_, child) {
               return ClipPath(
                 clipper: ThemeSwitcherClipperBridge(
-                  clipper: model.clipper,
-                  offset: model.switcherOffset,
-                  sizeRate: model.controller.value,
+                  clipper: themeNotifier.clipper,
+                  offset: themeNotifier.switcherOffset,
+                  sizeRate: themeNotifier.controller.value,
                 ),
                 child: child,
               );
@@ -54,13 +62,13 @@ class ThemeSwitchingArea extends StatelessWidget {
       );
     }
 
-    return Material(child: child);
+    return Material(child: _child);
   }
 
-  Widget _getPage(ThemeData brandTheme) {
+  Widget _applyTheme(ThemeData theme) {
     return Theme(
       key: ValueKey('ThemeSwitchingAreaPage'),
-      data: brandTheme,
+      data: theme,
       child: child,
     );
   }
